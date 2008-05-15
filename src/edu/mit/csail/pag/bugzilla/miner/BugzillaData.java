@@ -1,6 +1,11 @@
 package edu.mit.csail.pag.bugzilla.miner;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
 
 import org.jdom.Element;
 
@@ -10,24 +15,64 @@ public class BugzillaData {
 	String component;
 	Date reportedDate;
 	boolean isFixed;
+	Hashtable<String, String> metaData = new Hashtable<String, String>();
+
+	private static String interestingKeys[] = {"bug_id", "assigned_to", "attachment", 
+			"bug_severity", "bug_status", "cclist_accessible",
+			"classification", "classification_id", "component", "creation_ts",
+			"delta_ts", "everconfirmed",/* "long_desc", */
+			"op_sys", "priority", "product", "rep_platform", "reporter",
+			"reporter_accessible", "resolution", "target_milestone", "version",
+			"short_desc" };
 
 	public void parseXML(Element bugElement) {
 		Element bugIdElement = bugElement.getChild("bug_id");
 		id = Long.parseLong(bugIdElement.getTextTrim());
+		product = bugElement.getChildTextTrim("product");
+		component = bugElement.getChildTextTrim("component");
+		List<Element> elments = bugElement.getChildren();
+		for (Element one_elem : elments) {
+			metaData.put(one_elem.getName(), one_elem.getTextTrim());
+		}
+	}
 
-		Element productElement = bugElement.getChild("product");
-		if (productElement == null) {
-			product = null;
-		} else {
-			product = productElement.getTextTrim();
+	public static String toCSVHeadString() {
+		String ret = "";
+
+		for (String key : interestingKeys) {
+			ret += key + ", ";
 		}
 
-		Element componentElement = bugElement.getChild("component");
-		if (componentElement == null) {
-			component = null;
-		} else {
-			component = componentElement.getTextTrim();
+		return ret;
+	}
+	
+	public String toCSVString() {
+		String ret = "";
+
+		for (String key : interestingKeys) {
+			String value = metaData.get(key);
+			if (value == null) {
+				value = "[null]";
+			}
+			ret += value + ", ";
 		}
+
+		return ret;
+	}
+
+	public List<String> getKeys() {
+		List<String> keyList = new ArrayList<String>();
+		Enumeration<String> en = metaData.keys();
+		while (en.hasMoreElements()) {
+			keyList.add(en.nextElement());
+		}
+
+		Collections.sort(keyList);
+		return keyList;
+	}
+
+	public String getMetaValue(String metaKey) {
+		return metaData.get(metaKey);
 	}
 
 	public String toString() {
