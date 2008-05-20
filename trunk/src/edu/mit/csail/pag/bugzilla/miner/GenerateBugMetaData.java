@@ -111,8 +111,11 @@ public class GenerateBugMetaData {
 			}
 		}
 
+		System.err.println("We have " + keywordList.size() + " keys!");
+
 		System.out.print(BugzillaData.toCSVHeadString());
 		Collections.sort(keywordList);
+	
 		for (String key : keywordList) {
 			System.out.print(key + ", ");
 		}
