@@ -24,7 +24,7 @@ public class BugzillaData {
 			"delta_ts", "everconfirmed",/* "long_desc", */
 			"op_sys", "priority", "product", "rep_platform", "reporter",
 			"reporter_accessible", "resolution", "target_milestone", "version",
-			/*"short_desc"*/ };
+	/* "short_desc" */};
 
 	public void parseXML(Element bugElement) {
 		Element bugIdElement = bugElement.getChild("bug_id");
@@ -64,18 +64,20 @@ public class BugzillaData {
 	public String getShortDesc() {
 		return metaData.get("short_desc");
 	}
-	
+
 	public HashSet<String> getShortDescWordSet() {
 		HashSet<String> retSet = new HashSet<String>();
 		String shortDesc = getShortDesc();
-		if (shortDesc==null) {
+		if (shortDesc == null) {
 			return retSet;
 		}
-				
-		for (String key: shortDesc.split("\\W")) {
-			retSet.add(key);
+
+		for (String key : shortDesc.split("\\W")) {
+			if (key.length() > 1 && !Character.isDigit(key.charAt(0))) {
+				retSet.add(key);
+			}
 		}
-		
+
 		return retSet;
 	}
 
