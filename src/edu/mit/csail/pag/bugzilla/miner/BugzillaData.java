@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -17,13 +18,13 @@ public class BugzillaData {
 	boolean isFixed;
 	Hashtable<String, String> metaData = new Hashtable<String, String>();
 
-	private static String interestingKeys[] = {"bug_id", "assigned_to", "attachment", 
-			"bug_severity", "bug_status", "cclist_accessible",
+	private static String interestingKeys[] = { "bug_id", "assigned_to",
+			"attachment", "bug_severity", "bug_status", "cclist_accessible",
 			"classification", "classification_id", "component", "creation_ts",
 			"delta_ts", "everconfirmed",/* "long_desc", */
 			"op_sys", "priority", "product", "rep_platform", "reporter",
 			"reporter_accessible", "resolution", "target_milestone", "version",
-			"short_desc" };
+			/*"short_desc"*/ };
 
 	public void parseXML(Element bugElement) {
 		Element bugIdElement = bugElement.getChild("bug_id");
@@ -45,7 +46,7 @@ public class BugzillaData {
 
 		return ret;
 	}
-	
+
 	public String toCSVString() {
 		String ret = "";
 
@@ -58,6 +59,28 @@ public class BugzillaData {
 		}
 
 		return ret;
+	}
+
+	public String getShortDesc() {
+		return metaData.get("short_desc");
+	}
+	
+	public HashSet<String> getShortDescWordSet() {
+		HashSet<String> retSet = new HashSet<String>();
+		String shortDesc = getShortDesc();
+		if (shortDesc==null) {
+			return retSet;
+		}
+				
+		for (String key: shortDesc.split("\\W")) {
+			retSet.add(key);
+		}
+		
+		return retSet;
+	}
+
+	public String getLongDesc() {
+		return metaData.get("long_desc");
 	}
 
 	public List<String> getKeys() {
