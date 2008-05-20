@@ -74,7 +74,7 @@ public class BugzillaData {
 
 		for (String key : shortDesc.split("\\W")) {
 			if (key.length() > 1 && !Character.isDigit(key.charAt(0))) {
-				retSet.add(key);
+				retSet.add(key.toLowerCase());
 			}
 		}
 
