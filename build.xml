@@ -1,0 +1,175 @@
+<project name="kenyon" default="compile" basedir=".">
+	<description>
+        KENYON
+    </description>
+
+	<!-- set global properties for this build -->
+	<property name="src" location="src" />
+	<property name="lib" location="lib" />
+	<property name="build" location="bin" />
+	<property name="dist" location="dist" />
+	<property name="bin" location="bin" />
+	<property name="release" location="release" />
+
+	<path id="build.class.path">
+		<pathelement location="${build}" />
+		<path refid="lib.class.path" />
+	</path>
+
+	<path id="lib.class.path">
+		<fileset dir="${lib}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}" />
+		<!-- Copy .properties files -->
+		<copy todir="${build}">
+			<fileset dir="${src}">
+				<exclude name="**/testing/*.properties" />
+				<include name="*.properties" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="copy_mappings" depends="init">
+		<copy todir="${build}">
+			<fileset dir="${src}">
+				<include name="**/*.hbm.xml" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="compile" depends="copy_mappings" description="compile the source ">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" classpathref="lib.class.path" />
+	</target>
+
+	<target name="dist" depends="compile" description="generate the distribution">
+		<mkdir dir="${dist}" />
+		<!-- Put everything in ${build} into the kenyon-${DSTAMP}.jar file -->
+		<jar jarfile="${dist}/kenyon.jar" basedir="${build}" manifest="Manifest" excludes="**/testing/*.class, hibernate.properties" />
+		<!-- Copy .properties files not in jar file -->
+		<copy todir="${dist}">
+			<fileset dir="${src}">
+				<include name="hibernate.properties" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Javadoc -->
+	<target name="javadoc" description="generate the javadoc">
+		<mkdir dir="${dist}/doc" />
+		<javadoc sourcepath="${src}" destdir="${dist}/doc" doctitle="Kenyon JavaDoc" windowtitle="IVA Javadoc" packagenames="edu.se.evolution.kenyon.*">
+		</javadoc>
+	</target>
+
+	<target name="clean" depends="cleanhibernate" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+		<delete dir="${release}" />
+	</target>
+
+	<!-- delete old *.hbm.xml files -->
+	<target name="cleanhibernate" description="clean hibernate mapping files">
+		<delete failonerror="false">
+			<fileset dir="${src}">
+				<include name="**/*.hbm.xml" />
+			</fileset>
+			<fileset dir="${build}">
+				<include name="**/*.hbm.xml" />
+			</fileset>
+		</delete>
+	</target>
+
+	<!-- generate hibernate class mapping files -->
+	<target name="buildhibernate" depends="cleanhibernate">
+		<taskdef name="hibernatedoclet" classname="xdoclet.modules.hibernate.HibernateDocletTask">
+			<classpath refid="lib.class.path" />
+		</taskdef>
+
+		<hibernatedoclet destdir="${src}" excludedtags="@version,@author,@todo" verbose="true">
+			<fileset dir="${src}">
+				<include name="**/*.java" />
+			</fileset>
+			<hibernate version="2.0" />
+
+		</hibernatedoclet>
+	</target>
+
+	<!-- export database schema using the mapping files, write result to db -->
+	<!-- text=true means don't write to the db -->
+	<target name="buildschema" depends="compile">
+		<taskdef classname="net.sf.hibernate.tool.hbm2ddl.SchemaExportTask" name="schemaexport">
+			<classpath refid="build.class.path" />
+		</taskdef>
+		<mkdir dir="${build}/db" />
+		<schemaexport delimiter=";" drop="false" output="${build}/db/schema.sql" properties="${src}/hibernate.properties" quiet="false" text="false">
+			<fileset dir="${build}">
+				<include name="**/*.hbm.xml" />
+			</fileset>
+		</schemaexport>
+	</target>
+
+	<!-- Sets up junit to run a batch of db tests.  Currently unapplicable -->
+	<target name="junit">
+		<taskdef classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" name="junit">
+			<classpath refid="build.class.path" />
+		</taskdef>
+		<junit printsummary="yes">
+			<formatter type="plain" usefile="false" />
+			<!-- <formatter type="xml"/> -->
+			<classpath refid="build.class.path" />
+			<batchtest>
+				<fileset dir="${src}">
+					<include name="**/kenyon/testing/ProcessingTest.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="forked_junit">
+		<java fork="yes" classname="junit.textui.TestRunner">
+			<arg value="edu.se.evolution.kenyon.testing.ConfigDeltaTest" />
+			<jvmarg value="-Xms800m" />
+			<jvmarg value="-Xmx1800m" />
+			<classpath refid="build.class.path" />
+		</java>
+	</target>
+
+	<target name="release" depends="dist, javadoc">
+		<!-- Create the release directory -->
+		<mkdir dir="${release}" />
+		<mkdir dir="${release}/lib" />
+		<mkdir dir="${release}/dist" />
+		<mkdir dir="${release}/doc" />
+		<mkdir dir="${release}/bin" />
+		<mkdir dir="${release}/examples" />
+		<!-- Copy files files -->
+		<copy todir="${release}/dist">
+			<fileset dir="${dist}">
+				<include name="kenyon.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${release}/examples">
+			<fileset dir="examples" />
+		</copy>
+		<copy todir="${release}/doc">
+			<fileset dir="${dist}/doc" />
+		</copy>
+		<copy todir="${release}/bin">
+			<fileset dir="${bin}" />
+		</copy>
+		<copy todir="${release}/lib">
+			<fileset dir="${lib}">
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+	</target>
+
+</project>
