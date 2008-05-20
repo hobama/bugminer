@@ -85,9 +85,7 @@ public class GenerateBugMetaData {
 			BugzillaData bData = new BugzillaData();
 			bData.parseXML(bugElement);
 			keywords.addAll(bData.getShortDescWordSet());
-		}
-
-		keywordList.addAll(keywords);
+		}		
 	}
 
 	public void fillDataFromDir(String dirName) {
@@ -111,6 +109,7 @@ public class GenerateBugMetaData {
 			}
 		}
 
+		keywordList.addAll(keywords);
 		System.err.println("We have " + keywordList.size() + " keys!");
 
 		System.out.print(BugzillaData.toCSVHeadString());
