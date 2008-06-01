@@ -25,8 +25,6 @@ import edu.mit.csail.pag.bugzilla.util.HashCount;
 public class GenerateBugMetaData {
 	List<String> metaDataKeyList = null;
 
-	HashCount keywords = new HashCount();
-
 	HashCount stemmedKeywords = new HashCount();
 
 	List<String> keywordList = new ArrayList<String>();
@@ -60,7 +58,7 @@ public class GenerateBugMetaData {
 
 			List<String> valueList = bData.toCSVStringList();
 
-			for (Object key : stemmedKeywords.getKeyList()) {
+			for (String key : keywordList) {
 				if (keywordSet.contains(key)) {
 					valueList.add("1");
 				} else {
@@ -97,7 +95,6 @@ public class GenerateBugMetaData {
 		for (Element bugElement : bugElementList) {
 			BugzillaData bData = new BugzillaData();
 			bData.parseXML(bugElement);
-			keywords.addAll(bData.getShortDescWordSet());
 			stemmedKeywords.addAll(bData.getStemmedShortDescWordSet());
 		}
 	}
@@ -124,10 +121,8 @@ public class GenerateBugMetaData {
 			}
 		}
 
-		keywordList.addAll(stemmedKeywords.getKeyList());
-		System.err.println("We have " + keywordList.size()
-				+ " keys! (before stemmeing: " + keywords.getKeyList().size()
-				+ ")");
+		keywordList = stemmedKeywords.getDescendingKeyList();
+		System.err.println("We have " + keywordList.size() + " !");
 
 		// initiate CSVWriter and print heads
 		CSVWriter writer = new CSVWriter(new FileWriter(csvOut));
@@ -135,9 +130,6 @@ public class GenerateBugMetaData {
 		for (String head : BugzillaData.getHeads()) {
 			csvHead.add(head);
 		}
-
-		Collections.sort(keywordList);
-
 		for (String key : keywordList) {
 			csvHead.add("k_" + key + "(" + stemmedKeywords.getCount(key) + ")");
 		}

@@ -11,6 +11,8 @@ import java.util.List;
 import org.jdom.Element;
 import org.tartarus.snowball.ext.englishStemmer;
 
+import weka.core.Stopwords;
+
 public class BugzillaData {
 	long id;
 
@@ -94,7 +96,12 @@ public class BugzillaData {
 			stemmer.setCurrent(word);
 			stemmer.stem();
 			stemmer.stem();
-			retSet.add(stemmer.getCurrent());
+
+			// remove all stop words
+			word = stemmer.getCurrent();
+			if (!Stopwords.isStopword(word)) {
+				retSet.add(word);
+			}
 		}
 
 		return retSet;
