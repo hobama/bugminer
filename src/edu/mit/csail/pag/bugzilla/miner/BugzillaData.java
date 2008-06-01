@@ -1,5 +1,7 @@
 package edu.mit.csail.pag.bugzilla.miner;
 
+import gnu.java.security.action.GetSecurityPropertyAction;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -9,13 +11,19 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.jdom.Element;
+import org.tartarus.snowball.ext.englishStemmer;
 
 public class BugzillaData {
 	long id;
+
 	String product;
+
 	String component;
+
 	Date reportedDate;
+
 	boolean isFixed;
+
 	Hashtable<String, String> metaData = new Hashtable<String, String>();
 
 	private static String interestingKeys[] = { "bug_id", "assigned_to",
@@ -37,25 +45,19 @@ public class BugzillaData {
 		}
 	}
 
-	public static String toCSVHeadString() {
-		String ret = "";
-
-		for (String key : interestingKeys) {
-			ret += key + ", ";
-		}
-
-		return ret;
+	public static String[] getHeads() {
+		return interestingKeys;
 	}
 
-	public String toCSVString() {
-		String ret = "";
+	public List<String> toCSVStringList() {
+		List<String> ret = new ArrayList<String>();
 
 		for (String key : interestingKeys) {
 			String value = metaData.get(key);
 			if (value == null) {
 				value = "[null]";
 			}
-			ret += value + ", ";
+			ret.add(value);
 		}
 
 		return ret;
@@ -76,6 +78,25 @@ public class BugzillaData {
 			if (key.length() > 1 && !Character.isDigit(key.charAt(0))) {
 				retSet.add(key.toLowerCase());
 			}
+		}
+
+		return retSet;
+	}
+
+	/**
+	 * Return stemmed words
+	 * 
+	 * @return
+	 */
+	public HashSet<String> getStemmedShortDescWordSet() {
+		HashSet<String> retSet = new HashSet<String>();
+		HashSet<String> workingSet = getShortDescWordSet();
+		englishStemmer stemmer = new englishStemmer();
+		for (String word : workingSet) {
+			stemmer.setCurrent(word);
+			stemmer.stem();
+			stemmer.stem();
+			retSet.add(stemmer.getCurrent());
 		}
 
 		return retSet;
