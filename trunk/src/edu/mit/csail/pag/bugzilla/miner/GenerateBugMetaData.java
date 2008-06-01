@@ -21,7 +21,11 @@ import edu.mit.csail.pag.bugzilla.util.HashCount;
 
 public class GenerateBugMetaData {
 	List<String> metaDataKeyList = null;
-	HashSet<String> keywords = new HashSet<String>();
+
+	HashCount keywords = new HashCount();
+
+	HashCount stemmedKeywords = new HashCount();
+
 	List<String> keywordList = new ArrayList<String>();
 
 	public void fillData(File XMLFile) throws JDOMException, IOException {
@@ -56,9 +60,9 @@ public class GenerateBugMetaData {
 				} else {
 					System.out.print("0, ");
 				}
-			}			
+			}
 			System.out.println(bData.getShortDesc());
-		}		
+		}
 	}
 
 	public void fillKeywords(File XMLFile) throws JDOMException, IOException {
@@ -85,7 +89,8 @@ public class GenerateBugMetaData {
 			BugzillaData bData = new BugzillaData();
 			bData.parseXML(bugElement);
 			keywords.addAll(bData.getShortDescWordSet());
-		}		
+			stemmedKeywords.addAll(bData.getStemmedShortDescWordSet());
+		}
 	}
 
 	public void fillDataFromDir(String dirName) {
@@ -109,16 +114,18 @@ public class GenerateBugMetaData {
 			}
 		}
 
-		keywordList.addAll(keywords);
-		System.err.println("We have " + keywordList.size() + " keys!");
+		keywordList.addAll(stemmedKeywords.getKeyList());
+		System.err.println("We have " + keywordList.size()
+				+ " keys! (before stemmeing: " + keywords.getKeyList().size()
+				+ ")");
 
 		System.out.print(BugzillaData.toCSVHeadString());
 		Collections.sort(keywordList);
-	
+
 		for (String key : keywordList) {
 			System.out.print(key + ", ");
 		}
-		
+
 		System.out.println();
 
 		for (File xmlFile : XMLFileList) {
