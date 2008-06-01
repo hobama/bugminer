@@ -1,17 +1,23 @@
 package edu.mit.csail.pag.bugzilla.util;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 
 public class HashCount {
 	Hashtable hashtable = new Hashtable();
 
 	public void increase(Object key) {
 		update(key, 1);
+	}
+
+	public void addAll(Set set) {
+		for (Object obj : set) {
+			increase(obj);
+		}
 	}
 
 	public void update(Object key, int delta) {
@@ -141,4 +147,3 @@ public class HashCount {
 		}
 	}
 }
-

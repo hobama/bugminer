@@ -3,6 +3,7 @@ package edu.mit.csail.pag.bugzilla.miner;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.xml.sax.InputSource;
 
+import au.com.bytecode.opencsv.CSVWriter;
+
 import edu.mit.csail.pag.bugzilla.util.HashCount;
 
 public class GenerateBugMetaData {
@@ -28,7 +31,8 @@ public class GenerateBugMetaData {
 
 	List<String> keywordList = new ArrayList<String>();
 
-	public void fillData(File XMLFile) throws JDOMException, IOException {
+	public void fillData(File XMLFile, CSVWriter writer) throws JDOMException,
+			IOException {
 
 		System.err.println("Working on: " + XMLFile);
 
@@ -53,15 +57,20 @@ public class GenerateBugMetaData {
 			bData.parseXML(bugElement);
 
 			Set<String> keywordSet = bData.getShortDescWordSet();
-			System.out.print(bData.toCSVString());
-			for (String key : keywordList) {
+
+			List<String> valueList = bData.toCSVStringList();
+
+			for (Object key : stemmedKeywords.getKeyList()) {
 				if (keywordSet.contains(key)) {
-					System.out.print("1, ");
+					valueList.add("1");
 				} else {
-					System.out.print("0, ");
+					valueList.add("0");
 				}
 			}
-			System.out.println(bData.getShortDesc());
+
+			// write the result to CSV
+			String valueArray[] = new String[valueList.size()];
+			writer.writeNext(valueList.toArray(valueArray));
 		}
 	}
 
@@ -93,7 +102,8 @@ public class GenerateBugMetaData {
 		}
 	}
 
-	public void fillDataFromDir(String dirName) {
+	public void fillDataFromDir(String dirName, String csvOut)
+			throws IOException {
 		File dir = new File(dirName);
 		if (!dir.isDirectory()) {
 			return;
@@ -119,19 +129,26 @@ public class GenerateBugMetaData {
 				+ " keys! (before stemmeing: " + keywords.getKeyList().size()
 				+ ")");
 
-		System.out.print(BugzillaData.toCSVHeadString());
+		// initiate CSVWriter and print heads
+		CSVWriter writer = new CSVWriter(new FileWriter(csvOut));
+		List<String> csvHead = new ArrayList<String>();
+		for (String head : BugzillaData.getHeads()) {
+			csvHead.add(head);
+		}
+
 		Collections.sort(keywordList);
 
 		for (String key : keywordList) {
-			System.out.print(key + ", ");
+			csvHead.add("k_" + key + "(" + stemmedKeywords.getCount(key) + ")");
 		}
 
-		System.out.println();
+		String csvHeadArray[] = new String[csvHead.size()];
+		writer.writeNext(csvHead.toArray(csvHeadArray));
 
 		for (File xmlFile : XMLFileList) {
 			if (xmlFile.getName().endsWith(".xml")) {
 				try {
-					fillData(xmlFile);
+					fillData(xmlFile, writer);
 				} catch (JDOMException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -141,9 +158,15 @@ public class GenerateBugMetaData {
 				}
 			}
 		}
+
+		writer.close();
 	}
 
 	public static void main(String args[]) throws JDOMException, IOException {
-		new GenerateBugMetaData().fillDataFromDir(args[0]);
+		if (args.length != 2) {
+			System.err.println("Usage: program <bug-xml-dir> <out.csv>");
+			return;
+		}
+		new GenerateBugMetaData().fillDataFromDir(args[0], args[1]);
 	}
 }
