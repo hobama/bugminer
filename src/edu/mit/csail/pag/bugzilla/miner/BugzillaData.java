@@ -1,7 +1,5 @@
 package edu.mit.csail.pag.bugzilla.miner;
 
-import gnu.java.security.action.GetSecurityPropertyAction;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
