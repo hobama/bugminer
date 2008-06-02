@@ -23,6 +23,8 @@ import au.com.bytecode.opencsv.CSVWriter;
 import edu.mit.csail.pag.bugzilla.util.HashCount;
 
 public class GenerateBugMetaData {
+	private static final int KEYWORD_MIN_COUNT = 100;
+
 	List<String> metaDataKeyList = null;
 
 	HashCount stemmedKeywords = new HashCount();
@@ -58,7 +60,8 @@ public class GenerateBugMetaData {
 
 			List<String> valueList = bData.toCSVStringList();
 
-			for (String key : keywordList) {
+			for (int i = 0; i < Math.min(keywordList.size(), KEYWORD_MIN_COUNT); i++) {
+				String key = keywordList.get(i);
 				if (keywordSet.contains(key)) {
 					valueList.add("1");
 				} else {
@@ -130,7 +133,9 @@ public class GenerateBugMetaData {
 		for (String head : BugzillaData.getHeads()) {
 			csvHead.add(head);
 		}
-		for (String key : keywordList) {
+
+		for (int i = 0; i < Math.min(keywordList.size(), KEYWORD_MIN_COUNT); i++) {
+			String key = keywordList.get(i);
 			csvHead.add("k_" + key + "(" + stemmedKeywords.getCount(key) + ")");
 		}
 
