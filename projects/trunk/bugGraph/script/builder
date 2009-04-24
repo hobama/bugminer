@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+
+reldir="`dirname $0`"
+libdir=$reldir/../lib
+bindir=$reldir/../bin
+echo $bindir
+jarfiles=`find $libdir -name "*.jar"` 
+classpath=$bindir
+
+for file in $jarfiles ; do
+	classpath=$classpath:$file
+done
+if [ -n $CLASSPATH ] ; then
+	classpath=$classpath:$CLASSPATH
+fi
+
+java -Xmx800m -Xms400m -classpath $classpath hk.ust.cse.pag.cg.building.Builder $*
