@@ -5,6 +5,7 @@ import hk.ust.cse.pag.cg.building.findfix.ColumbaFindFix;
 import hk.ust.cse.pag.cg.building.findfix.IFindFix;
 import hk.ust.cse.pag.cg.building.findfix.JEditFindFix;
 import hk.ust.cse.pag.cg.building.findfix.ScarabFindFix;
+import hk.ust.cse.pag.cg.util.Const;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -83,14 +84,14 @@ public class SVNLogParser {
 
 	public static void main(String[] args) throws Exception {
 		SVNLogParser parser = new SVNLogParser();
-		parser.findFixRevisions(new File("/home/hunkim/checkouts/columba-svn"),
+		parser.findFixRevisions(new File(Const.CHECKOUT_DIR + "/columba-svn"),
 				"columba", new ColumbaFindFix());
-		parser.findFixRevisions(new File("/home/hunkim/checkouts/jedit"),
-				"jedit", new JEditFindFix());
-		parser.findFixRevisions(new File("/home/hunkim/checkouts/scarab"),
-				"scarab", new ScarabFindFix());
-		parser.findFixRevisions(new File("/home/hunkim/checkouts/argouml"),
-				"argouml", new ArgoUMLFindFix());
+		parser.findFixRevisions(new File(Const.CHECKOUT_DIR
+				+ "/jedit"), "jedit", new JEditFindFix());
+		parser.findFixRevisions(new File(Const.CHECKOUT_DIR
+				+ "/scarab"), "scarab", new ScarabFindFix());
+		parser.findFixRevisions(new File(Const.CHECKOUT_DIR
+				+ "/argouml"), "argouml", new ArgoUMLFindFix());
 	}
 
 }

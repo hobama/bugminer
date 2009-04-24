@@ -3,6 +3,7 @@ package hk.ust.cse.pag.cg.jar;
 import hk.ust.cse.pag.cg.cfg.CFG2GraphXML;
 import hk.ust.cse.pag.cg.cfg.CFGDiff;
 import hk.ust.cse.pag.cg.cfg.CFGDiffResult;
+import hk.ust.cse.pag.cg.util.Const;
 import hk.ust.cse.pag.cg.util.HashCount;
 
 import java.io.BufferedReader;
@@ -134,15 +135,15 @@ public class JarDiff {
 
 		// We have to run all of them together
 		// so that we capture the graph type correctly.
-		getJarDiffGraph(allNodeTable, new File(
-				"/home/hunkim/checkouts/columba-svn"), "columba");
-		getJarDiffGraph(allNodeTable, new File("/home/hunkim/checkouts/jedit"),
+		getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR
+				+ "/columba-svn"), "columba");
+		getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR + "/jedit"),
 				"jedit");
 
+		getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR + "/scarab"),
+				"scarab");
 		getJarDiffGraph(allNodeTable,
-				new File("/home/hunkim/checkouts/scarab"), "scarab");
-		getJarDiffGraph(allNodeTable,
-				new File("/home/hunkim/checkouts/argouml"), "argouml");
+				new File(Const.CHECKOUT_DIR + "/argouml"), "argouml");
 	}
 
 	private static void getJarDiffGraph(
@@ -198,7 +199,7 @@ public class JarDiff {
 			for (CFGDiffResult cfgDiffResult : result.changedCFGList) {
 				CFG2GraphXML.toGraphXML(cfgDiffResult, psBuf, psFix, true,
 						allNodeTable);
-				
+
 				// update bug and fix counts
 				cfgDiffResult.updateCount(bugCount, fixCount);
 			}

@@ -26,9 +26,7 @@ public class JarToCombindedCFG {
 			return;
 		}
 
-		File jarFile = new File(
-				"/home/hunkim/checkouts/columba-svn/jar_repos/columba_r353.jar");
-
+		
 		File dir = new File(args[0]);
 		File xgmlFile = new File(dir, "all_cfg.xgml");
 

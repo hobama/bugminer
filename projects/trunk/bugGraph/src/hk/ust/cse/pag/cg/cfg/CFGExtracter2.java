@@ -1,5 +1,6 @@
 package hk.ust.cse.pag.cg.cfg;
 
+import hk.ust.cse.pag.cg.util.Const;
 import hk.ust.cse.pag.cg.util.HashCount;
 
 import java.io.BufferedWriter;
@@ -128,8 +129,8 @@ public class CFGExtracter2 {
 	public static void main(String[] args) throws CFGBuilderException,
 			IOException {
 
-		File jarFile = new File(
-				"/home/hunkim/checkouts/columba-svn/jar_repos/columba_r353.jar");
+		File jarFile = new File(Const.CHECKOUT_DIR
+				+ "/columba-svn/jar_repos/columba_r353.jar");
 
 		File xgmlFile = new File(jarFile.getParentFile(), jarFile.getName()
 				+ ".xgml");

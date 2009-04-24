@@ -1,5 +1,6 @@
 package hk.ust.cse.pag.cg.cfg;
 
+import hk.ust.cse.pag.cg.util.Const;
 import hk.ust.cse.pag.cg.util.Util;
 
 import java.io.BufferedReader;
@@ -134,14 +135,19 @@ public class SubgraphToXML {
 		return edge;
 	}
 
+	/**
+	 * Test
+	 * 
+	 * @param args
+	 * @throws IOException
+	 */
 	public static void main(String[] args) throws IOException {
-		String checkOutDif = "/home/hunkim/checkouts/columba-svn";
+		String checkOutDif = Const.CHECKOUT_DIR + "/columba-svn";
 		SubgraphToXML subraph = new SubgraphToXML(checkOutDif);
 		subraph.toXGML("subgraph.txt");
 
-		checkOutDif = "/home/hunkim/checkouts/scarab";
+		checkOutDif = Const.CHECKOUT_DIR + "/scarab";
 		subraph = new SubgraphToXML(checkOutDif);
 		subraph.toXGML("subgraph.txt");
-
 	}
 }

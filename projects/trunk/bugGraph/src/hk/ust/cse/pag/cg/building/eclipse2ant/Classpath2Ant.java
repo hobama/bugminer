@@ -1,5 +1,7 @@
 package hk.ust.cse.pag.cg.building.eclipse2ant;
 
+import hk.ust.cse.pag.cg.util.Const;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -84,8 +86,8 @@ public class Classpath2Ant {
 
 	public static void main(String[] args) throws Exception {
 		Classpath2Ant parser = new Classpath2Ant();
-		parser.parse(new File(
-				"/home/hunkim/checkouts/columba/workspace/.classpath"));
+		parser.parse(new File(Const.CHECKOUT_DIR
+				+ "/columba/workspace/.classpath"));
 
 		parser.toBuildXML(System.out);
 	}
