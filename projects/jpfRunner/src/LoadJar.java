@@ -5,6 +5,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,12 +32,35 @@ public class LoadJar{
 	public LoadJar(){  
 	}
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException{
-		//JarFile jarF = new JarFile("jexp.jar");
-		//for(){}
+		JarFile jarF = new JarFile("D:/KZOOM/workspace/jpfRunner/src/jexp.jar");
+		Enumeration enums = jarF.entries();
+		String regex = null;
+		Pattern p = null;
+		Matcher m = null;
+		
+		while(enums.hasMoreElements()){
+			JarEntry entry = (JarEntry)enums.nextElement();
+			if(!entry.isDirectory()){
+		    	String name = entry.getName();
+			    if(name.endsWith(".class")){
+			    	regex = "(\\$.*)?\\.class$";
+			    	p = Pattern.compile(regex);   
+					m = p.matcher(name);
+					String replacedClassName = m.replaceAll("");
+			    	regex = "/";
+			    	p = Pattern.compile(regex);   
+			    	m = p.matcher(replacedClassName);
+					replacedClassName = m.replaceAll(".");
+					//System.out.println(replacedClassName);
+					loadClass(replacedClassName);
+			    }
+		    }
+		}
+/*
 		String[] className = {"com.bc.jexp.impl.NamespaceImpl"};
 		for (int i = 0; i < className.length;i++){
 			loadClass(className[i]);
-		}
+		}*/
 	}
 	
 	public static void loadClass(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException{
@@ -49,7 +74,7 @@ public class LoadJar{
             for (int i = 0; i < methlist.length;i++){
 	        	Method m = methlist[i];
 	        	methodName = m.getName();
-	        	System.out.println(methodName);
+	        	//System.out.println(methodName);
 	        	String tempDriverName = DriverName + "_" + methodName;
 			
 	        	String tempjavaFileContent = methodName;
@@ -57,56 +82,26 @@ public class LoadJar{
 	        	boolean generateFlag = true;
 	            Class param[] = m.getParameterTypes();
             	if(param.length == 0){
-            		break;
+            		tempjavaFileContent += "();";
             	}
 	            for (int j = 0; j < param.length; j++){
 	            	String[] paraSplit = param[j].toString().split(" ");
-	            	tempDriverName += "_" +paraSplit[1];
-	            	System.out.println(paraSplit[1]);
+	            	tempDriverName += "_" +paraSplit[paraSplit.length-1];
 	            	
-	            	/*Class p = Class.forName(paraSplit[1]);
-	            	//System.out.println(p.toString());
-					//p.newInstance();
-					if(p  ==  Integer.class || p == Short.class || p == Long.class){
-						paraValue = "1";
-					}
-					else if(p == Character.class || p == String.class){
-						paraValue = "'1'";
-					}
-					else if(p == Boolean.class ){
-						paraValue = "true";
-					}
-					else if(p == Float.class || p == Double.class){
-						paraValue = "1.0";
-					}
-					else{
-						//Constructor[] cc = p.getConstructors();
-						
-						Constructor cc = p.getConstructor();
-						TypeVariable[] t = cc.getTypeParameters();
-						if(t.length == 0){
-							paraValue = cc.newInstance(t).toString();
-						}
-						else{
-							break;
-						}
-						paraValue = "1";
-					}*/
-					
-	            	if(param[j] ==  Integer.class || param[j] == Short.class ||param[j] == Long.class){
+	            	if(param[j] ==  int.class || param[j] ==  Integer.class || param[j] == Short.class ||param[j] == Long.class){
 	            		paraValue = "1";
 	            	}
-	            	else if(param[j] == Character.class || param[j] == String.class){
-	            		paraValue = "\"1+1\"";
+	            	else if(param[j] ==  char.class || param[j] == Character.class || param[j] == String.class){
+	            		paraValue = "\"a\"";
 	            	}
-	            	else if(param[j] == Boolean.class ){
+	            	else if(param[j] ==  boolean.class || param[j] == Boolean.class ){
 	            		paraValue = "true";
 	            	}
-	            	else if(param[j] == Float.class || param[j] == Double.class){
+	            	else if(param[j] ==  float.class || param[j] ==  double.class || param[j] == Float.class || param[j] == Double.class){
 	            		paraValue = "1.0";
 	            	}
 	            	else{
-	            		//paraValue = param[j].newInstance().toString();
+	            		System.out.println(param[j]);
 	            	}
 	            	
 	            	if(j == 0){
@@ -132,7 +127,7 @@ public class LoadJar{
 
 				String regEx="\\."; 
 				Pattern pat=Pattern.compile(regEx);   
-				Matcher mat=pat.matcher(tempDriverName);   
+				Matcher mat=pat.matcher(tempDriverName);
 				String replacedDriverName=mat.replaceAll("_");
 				
 				String javaFileContent =
@@ -156,7 +151,7 @@ public class LoadJar{
 		FileOutputStream out = new FileOutputStream(javaFile + ".java");
 		out.write(fileContent.getBytes());
 		out.close();
-		System.out.println("File generated: " + javaFile + ".java");
+		//System.out.println("File generated: " + javaFile + ".java");
 	}
 	
 	public static void generatePropertiesFile(String className, String method, String methodParameters) throws IOException{
@@ -175,7 +170,7 @@ public class LoadJar{
 			+ className;
 		out.write(propertiesText.getBytes());
 		out.close();
-		System.out.println("File generated: " + className + ".properties");
+		//System.out.println("File generated: " + className + ".properties");
 	}
 	
 	/*
