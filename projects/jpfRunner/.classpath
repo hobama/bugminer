@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="F:/HKUST/CSIT510 OO software development/jexp-1.0-1/jexp-1.0/jexp.jar"/>
+	<classpathentry kind="lib" path="F:/HKUST/recrash/eclipse-JDT-SDK-3.4.2/eclipse/plugins/org.eclipse.jdt.core_3.4.4.v_894_R34x.jar"/>
+	<classpathentry kind="lib" path="C:/aspectj1.6/lib/aspectjrt.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
