@@ -32,7 +32,7 @@ public class LoadJar{
 	public LoadJar(){  
 	}
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException{
-		JarFile jarF = new JarFile("D:/KZOOM/workspace/jpfRunner/src/jexp.jar");
+		JarFile jarF = new JarFile("C:/aspectj1.6/lib/aspectjrt.jar");
 		Enumeration enums = jarF.entries();
 		String regex = null;
 		Pattern p = null;
@@ -70,7 +70,8 @@ public class LoadJar{
 			Method methlist[] = c.getDeclaredMethods();
 			String methodName = "";
 			String methodParameters = "";
-			
+
+    		boolean para_flag, generateFlag;
             for (int i = 0; i < methlist.length;i++){
 	        	Method m = methlist[i];
 	        	methodName = m.getName();
@@ -79,7 +80,8 @@ public class LoadJar{
 			
 	        	String tempjavaFileContent = methodName;
 	        	String paraValue = "";
-	        	boolean generateFlag = true;
+            	para_flag = false;
+	        	generateFlag = true;
 	            Class param[] = m.getParameterTypes();
             	if(param.length == 0){
             		tempjavaFileContent += "();";
@@ -88,10 +90,10 @@ public class LoadJar{
 	            	String[] paraSplit = param[j].toString().split(" ");
 	            	tempDriverName += "_" +paraSplit[paraSplit.length-1];
 	            	
-	            	if(param[j] ==  int.class || param[j] ==  Integer.class || param[j] == Short.class ||param[j] == Long.class){
+	            	if(param[j] ==  int.class || param[j] ==  short.class || param[j] ==  long.class || param[j] ==  Integer.class || param[j] == Short.class ||param[j] == Long.class){
 	            		paraValue = "1";
 	            	}
-	            	else if(param[j] ==  char.class || param[j] == Character.class || param[j] == String.class){
+	            	else if(param[j] ==  char.class || param[j] ==  byte.class || param[j] == Character.class || param[j] == String.class){
 	            		paraValue = "\"a\"";
 	            	}
 	            	else if(param[j] ==  boolean.class || param[j] == Boolean.class ){
@@ -101,7 +103,34 @@ public class LoadJar{
 	            		paraValue = "1.0";
 	            	}
 	            	else{
-	            		System.out.println(param[j]);
+	            		String regEx="^interface|\\[";//to see if it is an interface or array of objects
+	            		Pattern p=Pattern.compile(regEx); 
+	            		Matcher matcher=p.matcher(param[j].toString()); 
+	            		if(matcher.find()){
+	            			generateFlag = false;
+	            			break;
+	            		}
+	            		Class para_c = Class.forName(paraSplit[paraSplit.length-1]);
+	            		
+	            		Constructor[] para_c_c = para_c.getConstructors();
+	            		if(para_c_c.length ==0){
+	            			generateFlag = false;
+	            			break;
+	            		}
+	            		for(int k = 0; k < para_c_c.length; k++){
+	            			Class[] pccp = para_c_c[k].getParameterTypes();
+	            			if(pccp.length ==0){
+	            				para_flag = true;//indicates that we have a constructor with no arguments
+	            				paraValue = "new " + paraSplit[paraSplit.length-1] + "()";
+	            				//System.out.println(paraValue);
+	            				break;
+	            			}
+	            		}
+	            		if(!para_flag){
+	            			generateFlag = false;
+	            			break;
+	            		}
+	            		//System.out.println(param[j]);
 	            	}
 	            	
 	            	if(j == 0){
@@ -122,7 +151,7 @@ public class LoadJar{
 	            	}
 	            }
 	            if(!generateFlag)
-	            	break;
+	            	continue;
 	            tempjavaFileContent += "\n	}\n}";
 
 				String regEx="\\."; 
