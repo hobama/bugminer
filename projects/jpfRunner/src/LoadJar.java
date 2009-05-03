@@ -23,7 +23,7 @@ public class LoadJar{
 		Pattern p = null;
 		Matcher m = null;
 
-		clearScript();
+		initScript();
 		
 		while(enums.hasMoreElements()){
 			JarEntry entry = (JarEntry)enums.nextElement();
@@ -73,6 +73,7 @@ public class LoadJar{
 	            Class param[] = m.getParameterTypes();
             	if(param.length == 0){
             		tempjavaFileContent += "();";
+            		methodParameters = "()";
             	}
 	            for (int j = 0; j < param.length; j++){
 	            	String[] paraSplit = param[j].toString().split(" ");
@@ -124,7 +125,7 @@ public class LoadJar{
 	            	if(j == 0){
 	            		methodParameters = "(sym";
 	            		tempjavaFileContent += "(" + paraValue;
-	            		if(j == param.length - 1){
+	            		if(param.length == 1){
 	            			methodParameters += ")";
 	            			tempjavaFileContent += ");";
 	            		}
@@ -158,6 +159,8 @@ public class LoadJar{
 	            generatePropertiesFile(replacedDriverName, methodName, methodParameters);
 	            compile(replacedDriverName);
             }
+            //run the jpfRunner.sh to run the symbolic execution
+            runJPF();
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -209,35 +212,15 @@ public class LoadJar{
 		}
 		else{
 			//no error occurs, write into script
-			System.out.println(val + "  " + cmd);
-            runJPF(file);
+			//System.out.println(val + "  " + cmd);
+			writeIntoScript("/home/ryanzhu/trunk/bin/jpf -c " + file + ".properties " + file + "\n");
 		}
 	}
-
-	private static void runJPF(String file) throws IOException{
-		String cmd = "/home/ryanzhu/trunk/bin/jpf -c " + file + ".properties " + file;
-		//compile
-		Process process = Runtime.getRuntime().exec(cmd);
-		try	{ //wait the compiler to end
-			process.waitFor();
-		}
-		catch (InterruptedException e){
-		}
-		int val = process.exitValue();
-		if (val != 0){
-			//System.out.println(val);
-			//throw new RuntimeException("compile error:" + "error code" + val);
-		}
-		else{
-			//no error occurs, write into script
-			System.out.println(val + "  " + cmd);
-			writeIntoScript(cmd + "\n"+process.getOutputStream() + "\n");
-		}
-	}
+	
 	//clear the script file
-	private static void clearScript() throws IOException {
+	private static void initScript() throws IOException {
 		FileWriter fw = new FileWriter("jpfRunner.sh");
-		fw.write("");
+		fw.write("#!/bin/bash\n");
 		fw.close();
 	}
 
@@ -248,4 +231,28 @@ public class LoadJar{
 		fw.close();
 	}
 
+	private static void runJPF() throws IOException{
+		FileWriter fw = new FileWriter("run.sh");
+		String shTxt = 
+			"#!/bin/bash\n"
+			+ "jpf=`sh jpfRunner.sh`\n"
+			+ "echo -e $jpf > symbolicExecutionResult.txt\n";
+		fw.write(shTxt);
+		fw.close();
+		String cmd = "sh run.sh";
+		//compile
+		Process process = Runtime.getRuntime().exec(cmd);
+		try	{ //wait the execution to end
+			process.waitFor();
+		}
+		catch (InterruptedException e){
+		}
+		int val = process.exitValue();
+		if (val != 0){
+			process.destroy();
+		}
+		else{
+			//no error occurs, write into script
+		}
+	}
 } 
