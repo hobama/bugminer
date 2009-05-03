@@ -32,11 +32,16 @@ public class LoadJar{
 	public LoadJar(){  
 	}
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException{
-		JarFile jarF = new JarFile("C:/aspectj1.6/lib/aspectjrt.jar");
+		//JarFile jarF = new JarFile("C:/aspectj1.6/lib/aspectjrt.jar");
+		JarFile jarF = new JarFile("F:/HKUST/CSIT510 OO software development/jexp-1.0/jexp.jar");
 		Enumeration enums = jarF.entries();
+		
+	    //regular expression
 		String regex = null;
 		Pattern p = null;
 		Matcher m = null;
+
+		deleteScript();
 		
 		while(enums.hasMoreElements()){
 			JarEntry entry = (JarEntry)enums.nextElement();
@@ -56,6 +61,7 @@ public class LoadJar{
 			    }
 		    }
 		}
+		
 /*
 		String[] className = {"com.bc.jexp.impl.NamespaceImpl"};
 		for (int i = 0; i < className.length;i++){
@@ -63,14 +69,19 @@ public class LoadJar{
 		}*/
 	}
 	
-	public static void loadClass(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException{
+	private static void loadClass(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException{
 		try{
+			//for compiler
+			String _compiler = "javac";
+		    //String _classpath = "/home/ryanzhu/trunk/build/jpf/:jexp.jar:.";
+			String _classpath = "D:/KZOOM/workspace/jpfRunner/src/jexp.jar";
+		    
 			String DriverName = "Driver_" + className;
 			Class c = Class.forName(className);
 			Method methlist[] = c.getDeclaredMethods();
 			String methodName = "";
 			String methodParameters = "";
-
+			
     		boolean para_flag, generateFlag;
             for (int i = 0; i < methlist.length;i++){
 	        	Method m = methlist[i];
@@ -168,6 +179,7 @@ public class LoadJar{
 				    + "		newDriver.";   
 	            generateJavaFile(replacedDriverName, javaFileContent + tempjavaFileContent);
 	            generatePropertiesFile(replacedDriverName, methodName, methodParameters);
+	            invokeCompiler(replacedDriverName + ".java", _compiler, _classpath);
             }
 		} catch (SecurityException e) {
 			e.printStackTrace();
@@ -176,14 +188,14 @@ public class LoadJar{
 		}
 	}
 	
-	public static void generateJavaFile(String javaFile, String fileContent) throws IOException{
+	private static void generateJavaFile(String javaFile, String fileContent) throws IOException{
 		FileOutputStream out = new FileOutputStream(javaFile + ".java");
 		out.write(fileContent.getBytes());
 		out.close();
 		//System.out.println("File generated: " + javaFile + ".java");
 	}
 	
-	public static void generatePropertiesFile(String className, String method, String methodParameters) throws IOException{
+	private static void generatePropertiesFile(String className, String method, String methodParameters) throws IOException{
 		FileOutputStream out = new FileOutputStream(className + ".properties" );
 		String propertiesText = 
 			"vm.insn_factory.class = gov.nasa.jpf.symbc.SymbolicInstructionFactory\n"
@@ -202,21 +214,48 @@ public class LoadJar{
 		//System.out.println("File generated: " + className + ".properties");
 	}
 	
-	/*
-	public static void invokeCompiler(File javafile) throws IOException{
-		String[] cmd = { _compiler, "-classpath", _classpath, javafile.getName()};
+	
+	private static void invokeCompiler(String javafile, String _compiler, String _classpath) throws IOException{
+		String[] cmd = { _compiler, "-classpath", _classpath, javafile};
 		//compile
 		Process process = Runtime.getRuntime().exec(cmd);
 		try	{ //wait the compiler to end
-		   process.waitFor();
+			process.waitFor();
 		}
 		catch (InterruptedException e){
 		}
 		int val = process.exitValue();
 		if (val != 0){
-		   throw new RuntimeException("compile error:" + "error code" + val);
+			//System.out.println(val);
+			//throw new RuntimeException("compile error:" + "error code" + val);
+		}
+		else{
+			//no error occurs, write into script
+			System.out.println(val);
 		}
 	}
-	*/
+	
+	private static void deleteScript() {
+		
+	}
+
+	private static void writeIntoScript(String className, String method, String methodParameters) throws IOException{
+		FileOutputStream out = new FileOutputStream(className + ".properties" );
+		String propertiesText = 
+			"vm.insn_factory.class = gov.nasa.jpf.symbc.SymbolicInstructionFactory\n"
+			+ "jpf.listener = gov.nasa.jpf.symbc.SymbolicListener\n"
+			+ "vm.classpath = .:./jexp.jar\n"
+			+ "vm.sourcepath+= ,${user.home}/tmp\n"
+			+ "vm.storage.class=\n"
+			+ "symbolic.method=" + method + methodParameters + "\n"
+			+ "search.multiple_errors=true\n"
+			+ "+vm.peer.packages=gov.nasa.jpf.symbc,gov.nasa.jpf.jvm\n"
+			+ "log.level=warning\n"
+			+ "jpf.report.console.finished=\n"
+			+ className;
+		out.write(propertiesText.getBytes());
+		out.close();
+		//System.out.println("File generated: " + className + ".properties");
+	}
 
 } 
