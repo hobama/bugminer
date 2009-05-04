@@ -12,10 +12,13 @@ import java.util.regex.Pattern;
 public class LoadJar{
 	public LoadJar(){  
 	}
+	
+	private final static String jarFile = "./jexp.jar";
+	
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException{
 		//JarFile jarF = new JarFile("C:/aspectj1.6/lib/aspectjrt.jar");
 		//JarFile jarF = new JarFile("F:/HKUST/CSIT510 OO software development/jexp-1.0/jexp.jar");
-		JarFile jarF = new JarFile("../jexp.jar");
+		JarFile jarF = new JarFile(jarFile);
 		Enumeration enums = jarF.entries();
 		
 	    //regular expression
@@ -180,7 +183,7 @@ public class LoadJar{
 		String propertiesText = 
 			"vm.insn_factory.class = gov.nasa.jpf.symbc.SymbolicInstructionFactory\n"
 			+ "jpf.listener = gov.nasa.jpf.symbc.SymbolicListener\n"
-			+ "vm.classpath = .:./jexp.jar\n"
+			+ "vm.classpath = .:" + jarFile + "\n"
 			+ "vm.sourcepath+= ,${user.home}/tmp\n"
 			+ "vm.storage.class=\n"
 			+ "symbolic.method=" + method + methodParameters + "\n"
@@ -196,7 +199,7 @@ public class LoadJar{
 	
 	
 	private static void compile(String file) throws IOException{
-		String cmd = "javac -classpath ../jexp.jar " + file + ".java";
+		String cmd = "javac -classpath " + jarFile + " " + file + ".java";
 		//String cmd = "javac -classpath D:/KZOOM/workspace/jpfRunner/src/jexp.jar " + file + ".java";
 		//compile
 		Process process = Runtime.getRuntime().exec(cmd);
@@ -235,8 +238,7 @@ public class LoadJar{
 		FileWriter fw = new FileWriter("run.sh");
 		String shTxt = 
 			"#!/bin/bash\n"
-			+ "jpf=`sh jpfRunner.sh`\n"
-			+ "echo -e $jpf > symbolicExecutionResult.txt\n";
+			+ "sh jpfRunner.sh > symbolicExecutionResult.txt\n";
 		fw.write(shTxt);
 		fw.close();
 		String cmd = "sh run.sh";
