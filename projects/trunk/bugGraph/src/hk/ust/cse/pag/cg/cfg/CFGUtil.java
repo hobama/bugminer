@@ -87,7 +87,9 @@ public class CFGUtil {
 
 		for (Method m : aClass.getMethods()) {
 			try {
-				list.add(getCFG(aClass, m));
+			    if (!m.isAbstract()) {
+	                list.add(getCFG(aClass, m));
+                }
 			} catch (Exception e) {
 				System.err.println(e);
 			}
