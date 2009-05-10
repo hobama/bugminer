@@ -1,3 +1,5 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -8,12 +10,13 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 public class LoadJar{
 	public LoadJar(){  
 	}
 	
-	private final static String jarFile = "./jexp.jar";
+	//private final static String jarFile = "./jexp.jar";
+	//private final static String jarFile = "F:/HKUST/recrash/eclipse-JDT-SDK-3.4.2/eclipse/plugins/org.eclipse.jdt.core_3.4.4.v_894_R34x.jar";
+	private final static String jarFile = "./aspectjrt.jar";
 	
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException{
 		//JarFile jarF = new JarFile("C:/aspectj1.6/lib/aspectjrt.jar");
@@ -33,6 +36,7 @@ public class LoadJar{
 			if(!entry.isDirectory()){
 		    	String name = entry.getName();
 			    if(name.endsWith(".class")){
+			    	//System.out.println(name);
 			    	regex = "(\\$.*)?\\.class$";
 			    	p = Pattern.compile(regex);   
 					m = p.matcher(name);
@@ -94,6 +98,9 @@ public class LoadJar{
 	            	else if(param[j] ==  float.class || param[j] ==  double.class || param[j] == Float.class || param[j] == Double.class){
 	            		paraValue = "1.0";
 	            	}
+	            	else if(param[j] ==  Class.class || param[j] == Object.class){
+	            		paraValue = "new Integer(1)";
+	            	}
 	            	else{
 	            		String regEx="^interface|\\[";//to see if it is an interface or array of objects
 	            		Pattern p=Pattern.compile(regEx); 
@@ -109,20 +116,55 @@ public class LoadJar{
 	            			generateFlag = false;
 	            			break;
 	            		}
+	            		//object with constructors
+            			paraValue = "new " + paraSplit[paraSplit.length-1] + "(";
 	            		for(int k = 0; k < para_c_c.length; k++){
 	            			Class[] pccp = para_c_c[k].getParameterTypes();
 	            			if(pccp.length ==0){
 	            				para_flag = true;//indicates that we have a constructor with no arguments
-	            				paraValue = "new " + paraSplit[paraSplit.length-1] + "()";
+	            				paraValue += ")";
 	            				//System.out.println(paraValue);
 	            				break;
+	            			}
+	            			for(int l = 0; l < pccp.length; l++){
+	        	            	String[] paraSplit_l = pccp[l].toString().split(" ");
+	        	            	//tempDriverName += "_" +paraSplit_l[paraSplit_l.length-1];
+	        	            	String tempS = "";
+	        	            	
+	        	            	if(pccp[l] ==  int.class || pccp[l] ==  short.class || pccp[l] ==  long.class || pccp[l] ==  Integer.class || pccp[l] == Short.class || pccp[l] == Long.class){
+	        	            		tempS = "1";
+	        	            	}
+	        	            	else if(pccp[l] ==  char.class || pccp[l] ==  byte.class || pccp[l] == Character.class || pccp[l] == String.class){
+	        	            		tempS = "\"a\"";
+	        	            	}
+	        	            	else if(pccp[l] ==  boolean.class || pccp[l] == Boolean.class ){
+	        	            		tempS = "true";
+	        	            	}
+	        	            	else if(pccp[l] ==  float.class || pccp[l] ==  double.class || pccp[l] == Float.class || pccp[l] == Double.class){
+	        	            		tempS = "1.0";
+	        	            	}
+	        	            	else{
+	        	            		tempS = "null";
+	        	            	}
+
+	        	            	if(l == 0){
+	        	            		paraValue += tempS;
+	        	            		if(param.length == 1){
+	        	            			paraValue += ")";
+	        	            		}
+	        	            	}
+	        	            	else if(l == param.length - 1){
+	        	            		paraValue += "," + tempS + ")";
+	        	            	}
+	        	            	else{
+	        	            		paraValue += "," + tempS;
+	        	            	}
 	            			}
 	            		}
 	            		if(!para_flag){
 	            			generateFlag = false;
 	            			break;
 	            		}
-	            		//System.out.println(param[j]);
 	            	}
 	            	
 	            	if(j == 0){
@@ -144,7 +186,7 @@ public class LoadJar{
 	            }
 	            if(!generateFlag)
 	            	continue;
-	            tempjavaFileContent += "\n	}\n}";
+	            tempjavaFileContent += "\n		} catch(Exception e){\n			e.printStackTrace();\n		}\n	}\n}";
 
 				String regEx="\\."; 
 				Pattern pat=Pattern.compile(regEx);   
@@ -152,18 +194,19 @@ public class LoadJar{
 				String replacedDriverName=mat.replaceAll("_");
 				
 				String javaFileContent =
-					"import java.io.IOException;\n"
+					"import java.lang.Exception;\n"
 					+ "import " + className + ";\n"
 				   	+ "\npublic class " + replacedDriverName + " {\n"
-				    + "	public static void main(String[] args) throws Exception{\n"
-				    + "		" + className + " newDriver = new " + className + "();\n"
-				    + "		newDriver.";   
+				    + "	public static void main(String[] args){\n"
+				   	+ "		try{\n"
+				    + "			" + className + " newDriver = new " + className + "();\n"
+				    + "			newDriver.";   
 	            generateJavaFile(replacedDriverName, javaFileContent + tempjavaFileContent);
 	            generatePropertiesFile(replacedDriverName, methodName, methodParameters);
 	            compile(replacedDriverName);
             }
             //run the jpfRunner.sh to run the symbolic execution
-            runJPF();
+            //runJPF();
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -174,6 +217,7 @@ public class LoadJar{
 	private static void generateJavaFile(String javaFile, String fileContent) throws IOException{
 		FileWriter fw = new FileWriter(javaFile + ".java");
 		fw.write(fileContent);
+		fw.flush();
 		fw.close();
 		//System.out.println("File generated: " + javaFile + ".java");
 	}
@@ -193,13 +237,14 @@ public class LoadJar{
 			+ "jpf.report.console.finished=\n"
 			+ className;
 		fw.write(propertiesText);
+		fw.flush();
 		fw.close();
 		//System.out.println("File generated: " + className + ".properties");
 	}
 	
 	
 	private static void compile(String file) throws IOException{
-		String cmd = "javac -classpath " + jarFile + " " + file + ".java";
+		String cmd = "javac -classpath " + jarFile + ":. " + file + ".java";
 		//String cmd = "javac -classpath D:/KZOOM/workspace/jpfRunner/src/jexp.jar " + file + ".java";
 		//compile
 		Process process = Runtime.getRuntime().exec(cmd);
@@ -216,7 +261,64 @@ public class LoadJar{
 		else{
 			//no error occurs, write into script
 			//System.out.println(val + "  " + cmd);
-			writeIntoScript("/home/ryanzhu/trunk/bin/jpf -c " + file + ".properties " + file + "\n");
+			writeIntoFile("singelRun.sh",false,"#!/bin/bash\n/home/ryanzhu/trunk/bin/jpf -c " + file + ".properties " + file + "\n");
+			writeIntoFile("jpfRunner.sh",true,"/home/ryanzhu/trunk/bin/jpf -c " + file + ".properties " + file + "\n");
+			runSingleJPF(file);
+		}
+	}
+
+	private static void runSingleJPF(String file) throws IOException{
+		FileWriter fw = new FileWriter("run.sh");
+		String shTxt = 
+			"#!/bin/bash\n"
+			+ "sh singelRun.sh > symbolicExecutionResult.txt\n";
+		fw.write(shTxt);
+		fw.flush();
+		fw.close();
+		String cmd = "sh run.sh";
+		//execute a single run
+		Process process = Runtime.getRuntime().exec(cmd);
+		try	{ //wait the compiler to end
+			process.waitFor();
+		}
+		catch (InterruptedException e){
+		}
+		int val = process.exitValue();
+		if (val != 0){
+			//throw new RuntimeException("compile error:" + "error code" + val);
+		}
+		else{
+			//no error occurs
+			//read from the symbolicExecutionResult.txt to check if ok
+			//if ok, store the method for the next round test;else, store the infos into unhandledResult.txt
+			FileReader fr = new FileReader("symbolicExecutionResult.txt");
+			BufferedReader br = new BufferedReader (fr);
+            String s,ss;
+            boolean ok_flag = false;
+    		String regEx_NoPathCondition="No path conditions for\\s*";//to see if it has no path conditions
+    		String regEx_Exception="\\w*\\.\\w*Exception";//to see if it has exceptions
+    		Pattern p_NoPathCondition=Pattern.compile(regEx_NoPathCondition); 
+    		Pattern p_Exception=Pattern.compile(regEx_Exception); 
+    		Matcher matcher_NoPathCondition,matcher_Exception;
+    		
+            while ((s = br.readLine() )!=null){
+        		matcher_NoPathCondition=p_NoPathCondition.matcher(s); 
+        		matcher_Exception=p_NoPathCondition.matcher(s); 
+        		if(matcher_NoPathCondition.find()){
+        			ok_flag = true;
+        			ss = matcher_NoPathCondition.replaceAll("");
+        			writeIntoFile("handledResult.txt",true,ss+"\n");
+        			break;
+        		}
+        		if(matcher_Exception.find()){
+        			ok_flag = false;
+        			writeIntoFile("unhandledResult.txt",true,s+"\n");
+        			break;
+        		}
+            	//System.out.println (s);
+            }
+            
+            fr.close();
 		}
 	}
 	
@@ -224,13 +326,27 @@ public class LoadJar{
 	private static void initScript() throws IOException {
 		FileWriter fw = new FileWriter("jpfRunner.sh");
 		fw.write("#!/bin/bash\n");
+		fw.flush();
 		fw.close();
+		FileWriter fw2 = new FileWriter("singelRun.sh");
+		fw2.write("");
+		fw2.flush();
+		fw2.close();
+		FileWriter fw3 = new FileWriter("unhandledResult.txt");
+		fw3.write("");
+		fw3.flush();
+		fw3.close();
+		FileWriter fw4 = new FileWriter("handledResult.txt");
+		fw4.write("");
+		fw4.flush();
+		fw4.close();
 	}
 
 	//append script content to the jpfRunner.sh
-	private static void writeIntoScript(String scriptContent) throws IOException{
-		FileWriter fw = new FileWriter("jpfRunner.sh", true);
-		fw.write(scriptContent);
+	private static void writeIntoFile(String fileName, boolean append, String fileContent) throws IOException{
+		FileWriter fw = new FileWriter(fileName, append);
+		fw.write(fileContent);
+		fw.flush();
 		fw.close();
 	}
 
@@ -240,6 +356,7 @@ public class LoadJar{
 			"#!/bin/bash\n"
 			+ "sh jpfRunner.sh > symbolicExecutionResult.txt\n";
 		fw.write(shTxt);
+		fw.flush();
 		fw.close();
 		String cmd = "sh run.sh";
 		//compile
