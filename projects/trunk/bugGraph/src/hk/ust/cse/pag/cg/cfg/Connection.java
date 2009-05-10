@@ -3,10 +3,26 @@ package hk.ust.cse.pag.cg.cfg;
 public class Connection {
 	String source;
 	String target;
+	Node sourceNode;
+	Node targetNode;
 
 	public Connection(Node source, Node target) {
 		this.source = source.name;
 		this.target = target.name;
+		
+		// keep the node object
+		sourceNode = source;
+		targetNode = target;
+	}
+	
+	public Node getSourceNode()
+	{
+	    return sourceNode;
+	}
+	
+	public Node getTargetNode()
+	{
+	    return targetNode;
 	}
 
 	@Override

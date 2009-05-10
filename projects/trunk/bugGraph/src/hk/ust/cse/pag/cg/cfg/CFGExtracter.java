@@ -117,6 +117,22 @@ public class CFGExtracter {
 		CFG2GraphXML.toGraphXML(uniqueNode, uniqueEdge, bw);
 		bw.close();
 	}
+	
+	/**
+     * return all Nodes
+     */
+	public HashCount<Node> getNodes()
+	{
+	    return uniqueNode;
+	}
+	
+	/**
+     * return all Connections
+     */
+	public HashCount<Connection> getConnections()
+	{
+	    return uniqueEdge;
+	}
 
 	/**
 	 * It draws combined CFG from a give jar
