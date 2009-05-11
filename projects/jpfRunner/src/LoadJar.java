@@ -271,7 +271,8 @@ public class LoadJar{
 		FileWriter fw = new FileWriter("run.sh");
 		String shTxt = 
 			"#!/bin/bash\n"
-			+ "sh singelRun.sh > symbolicExecutionResult.txt\n";
+			+ "sh singelRun.sh > singleResult.txt\n"
+			+ "cat singleResult.txt >> symbolicExecutionResult.txt\n";
 		fw.write(shTxt);
 		fw.flush();
 		fw.close();
@@ -286,12 +287,13 @@ public class LoadJar{
 		int val = process.exitValue();
 		if (val != 0){
 			//throw new RuntimeException("compile error:" + "error code" + val);
+			writeIntoFile("unhandledResult.txt",true,file+"\n");
 		}
 		else{
 			//no error occurs
 			//read from the symbolicExecutionResult.txt to check if ok
 			//if ok, store the method for the next round test;else, store the infos into unhandledResult.txt
-			FileReader fr = new FileReader("symbolicExecutionResult.txt");
+			FileReader fr = new FileReader("singleResult.txt");
 			BufferedReader br = new BufferedReader (fr);
             String s,ss;
             boolean ok_flag = false;
@@ -308,11 +310,13 @@ public class LoadJar{
         			ok_flag = true;
         			ss = matcher_NoPathCondition.replaceAll("");
         			writeIntoFile("handledResult.txt",true,ss+"\n");
+        			fr.close();
         			break;
         		}
         		if(matcher_Exception.find()){
         			ok_flag = false;
         			writeIntoFile("unhandledResult.txt",true,s+"\n");
+        			fr.close();
         			break;
         		}
             	//System.out.println (s);
