@@ -15,8 +15,10 @@ public class LoadJar{
 	}
 	
 	//private final static String jarFile = "./jexp.jar";
-	//private final static String jarFile = "F:/HKUST/recrash/eclipse-JDT-SDK-3.4.2/eclipse/plugins/org.eclipse.jdt.core_3.4.4.v_894_R34x.jar";
-	private final static String jarFile = "./aspectjrt.jar";
+	private final static String jarFile = "./bsf.jar";
+	//private final static String jarFile = "./bcel.jar";
+	//private final static String jarFile = "./iTextAsian.jar";
+	//private final static String jarFile = "./aspectjrt.jar";
 	
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException{
 		//JarFile jarF = new JarFile("C:/aspectj1.6/lib/aspectjrt.jar");
@@ -31,6 +33,7 @@ public class LoadJar{
 
 		initScript();
 		
+		int methodCount = 0;
 		while(enums.hasMoreElements()){
 			JarEntry entry = (JarEntry)enums.nextElement();
 			if(!entry.isDirectory()){
@@ -47,15 +50,13 @@ public class LoadJar{
 					replacedClassName = m.replaceAll(".");
 					//System.out.println(replacedClassName);
 					loadClass(replacedClassName);
+					Class c = Class.forName(replacedClassName);
+					Method methlist[] = c.getDeclaredMethods();
+					methodCount += methlist.length;
 			    }
 		    }
 		}
-		
-/*
-		String[] className = {"com.bc.jexp.impl.NamespaceImpl"};
-		for (int i = 0; i < className.length;i++){
-			loadClass(className[i]);
-		}*/
+		writeIntoFile("handledResult.txt",true, methodCount+"\n");
 	}
 	
 	private static void loadClass(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException{
@@ -261,9 +262,14 @@ public class LoadJar{
 		else{
 			//no error occurs, write into script
 			//System.out.println(val + "  " + cmd);
-			writeIntoFile("singelRun.sh",false,"#!/bin/bash\n/home/ryanzhu/trunk/bin/jpf -c " + file + ".properties " + file + "\n");
+			writeIntoFile("singleRun.sh",false,"#!/bin/bash\n/home/ryanzhu/trunk/bin/jpf -c " + file + ".properties " + file + "\n");
 			writeIntoFile("jpfRunner.sh",true,"/home/ryanzhu/trunk/bin/jpf -c " + file + ".properties " + file + "\n");
-			runSingleJPF(file);
+			try{
+				runSingleJPF(file);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -271,7 +277,7 @@ public class LoadJar{
 		FileWriter fw = new FileWriter("run.sh");
 		String shTxt = 
 			"#!/bin/bash\n"
-			+ "sh singelRun.sh > singleResult.txt\n"
+			+ "sh singleRun.sh > singleResult.txt\n"
 			+ "cat singleResult.txt >> symbolicExecutionResult.txt\n";
 		fw.write(shTxt);
 		fw.flush();
@@ -309,13 +315,13 @@ public class LoadJar{
         		if(matcher_NoPathCondition.find()){
         			ok_flag = true;
         			ss = matcher_NoPathCondition.replaceAll("");
-        			writeIntoFile("handledResult.txt",true,ss+"\n");
+        			writeIntoFile("handledResult.txt",true,file + "  " + ss+"\n");
         			fr.close();
         			break;
         		}
         		if(matcher_Exception.find()){
         			ok_flag = false;
-        			writeIntoFile("unhandledResult.txt",true,s+"\n");
+        			writeIntoFile("unhandledResult.txt",true,file + "  " + s+"\n");
         			fr.close();
         			break;
         		}
@@ -344,6 +350,10 @@ public class LoadJar{
 		fw4.write("");
 		fw4.flush();
 		fw4.close();
+		FileWriter fw5 = new FileWriter("symbolicExecutionResult.txt");
+		fw5.write("");
+		fw5.flush();
+		fw5.close();
 	}
 
 	//append script content to the jpfRunner.sh
