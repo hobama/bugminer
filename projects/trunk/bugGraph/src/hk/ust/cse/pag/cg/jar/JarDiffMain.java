@@ -22,7 +22,14 @@ import java.util.jar.JarFile;
 
 import edu.umd.cs.findbugs.ba.CFGBuilderException;
 
-public class JarDiff {
+/**
+ * This program reads all jars in the directory and generate graph for Hong's
+ * tool.
+ * 
+ * @author hunkim
+ * 
+ */
+public class JarDiffMain {
 	JarDiffResult getDiff(File prevJar, File newJar) throws IOException,
 			CFGBuilderException {
 		JarDiffResult result = new JarDiffResult();
@@ -121,31 +128,6 @@ public class JarDiff {
 		return bytes;
 	}
 
-	/**
-	 * Simple test
-	 * 
-	 * @param args
-	 * @throws IOException
-	 * @throws CFGBuilderException
-	 */
-	public static void main(String[] args) throws IOException,
-			CFGBuilderException {
-
-		Hashtable<String, Integer> allNodeTable = new Hashtable<String, Integer>();
-
-		// We have to run all of them together
-		// so that we capture the graph type correctly.
-		getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR
-				+ "/columba-svn"), "columba");
-		getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR + "/jedit"),
-				"jedit");
-
-		getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR + "/scarab"),
-				"scarab");
-		getJarDiffGraph(allNodeTable,
-				new File(Const.CHECKOUT_DIR + "/argouml"), "argouml");
-	}
-
 	private static void getJarDiffGraph(
 			Hashtable<String, Integer> allNodeTable, File checkOutDir,
 			String jarName) throws FileNotFoundException, IOException,
@@ -193,7 +175,7 @@ public class JarDiff {
 			}
 
 			System.out.println("Working on " + prevJar + " and " + newJar);
-			JarDiff diff = new JarDiff();
+			JarDiffMain diff = new JarDiffMain();
 			JarDiffResult result = diff.getDiff(prevJar, newJar);
 
 			for (CFGDiffResult cfgDiffResult : result.changedCFGList) {
@@ -214,5 +196,31 @@ public class JarDiff {
 		psNode.close();
 
 		br.close();
+	}
+
+	/**
+	 * This is the main. Get bug and fix graphs from given two revisions
+	 * 
+	 * @param args
+	 * @throws IOException
+	 * @throws CFGBuilderException
+	 */
+	public static void main(String[] args) throws IOException,
+			CFGBuilderException {
+
+		Hashtable<String, Integer> allNodeTable = new Hashtable<String, Integer>();
+
+		// We have to run all of them together
+		// so that we capture the graph type correctly.
+		getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR
+				+ "/columba-svn"), "columba");
+		getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR + "/jedit"),
+				"jedit");
+
+		getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR + "/scarab"),
+				"scarab");
+
+		getJarDiffGraph(allNodeTable,
+				new File(Const.CHECKOUT_DIR + "/argouml"), "argouml");
 	}
 }
