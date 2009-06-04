@@ -1,18 +1,17 @@
 <project name="colorgraph" default="compile" basedir=".">
-<path id="classpath">
 
 <property name="src.dir" value="src" />
 <property name="lib.dir" value="lib" />
 <property name="bin.dir" value="bin" />
 
-	
-<fileset dir="lib">
-<include name="**/*.jar" />
-</fileset>
-<pathelement path="bin" />
-<pathelement path="lib/commons-digester-1.8.jar" />
-<pathelement path="lib/commons-beanutils-1.8.0.jar" />
-<pathelement path="lib/commons-logging-1.1.1.jar" />
+<path id="classpath">
+  <fileset dir="lib">
+  <include name="**/*.jar" />
+  </fileset>
+  <pathelement path="bin" />
+  <pathelement path="lib/commons-digester-1.8.jar" />
+  <pathelement path="lib/commons-beanutils-1.8.0.jar" />
+  <pathelement path="lib/commons-logging-1.1.1.jar" />
 </path>
 	
  <target name="init">
