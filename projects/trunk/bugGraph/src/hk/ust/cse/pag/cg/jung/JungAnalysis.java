@@ -35,12 +35,12 @@ import hk.ust.cse.pag.cg.util.HashCount;
 
 public class JungAnalysis
 {
-    private HashCount<Node>                         m_nodes;
-    private HashCount<Connection>                   m_edges;
-    private Graph<Node, Connection>                 m_graph;
-    private Transformer<Connection, Double>         m_wtTansformer;
-    private DijkstraShortestPath<Node, Connection>  m_shortestPath;
-    private int                                     m_maxConnection;  
+    private HashCount<Node>                                 m_nodes;
+    private HashCount<Connection>                           m_edges;
+    private Graph<NodeWrapper, Connection>                  m_graph;
+    private Transformer<Connection, Double>                 m_wtTansformer;
+    private DijkstraShortestPath<NodeWrapper, Connection>   m_shortestPath;
+    private int                                             m_maxConnection;  
     
     public JungAnalysis(CFGExtracter extracter, boolean bDirected, boolean bWeight)
     {
@@ -51,7 +51,7 @@ public class JungAnalysis
             m_edges = extracter.getConnections();
             
             // create graph from CFGs
-            m_graph = new SparseMultigraph<Node, Connection>();
+            m_graph = new SparseMultigraph<NodeWrapper, Connection>();
             System.out.println("Creating graph...");
             
             // add vertexes
@@ -59,7 +59,7 @@ public class JungAnalysis
             List<Node> nodes = m_nodes.getKeyList();
             for (Node node : nodes)
             {
-                m_graph.addVertex(node);
+                m_graph.addVertex(new NodeWrapper(node));
             }
             System.out.println(nodes.size() + " vertices added to graph.");
             
@@ -70,9 +70,11 @@ public class JungAnalysis
             List<Connection> edges = m_edges.getKeyList();
             for (Connection edge : edges)
             {
+                NodeWrapper source = NodeWrapper.getNodeWrapper(edge.getSourceNode());
+                NodeWrapper target = NodeWrapper.getNodeWrapper(edge.getTargetNode());              
                 m_graph.addEdge(edge, 
-                                edge.getSourceNode(), 
-                                edge.getTargetNode(), 
+                                source, 
+                                target, 
                                 edgeType);
                 int count = m_edges.getCount(edge);
                 if (count > m_maxConnection)
@@ -116,10 +118,10 @@ public class JungAnalysis
      * Gets the betweenness centrality of every Node,
      * return in descending order
      */
-    public List<SortItem<Node>> getBetweennessCentrality()
+    public List<SortItem<NodeWrapper>> getBetweennessCentrality()
     {
-        BetweennessCentrality<Node, Connection> betweeness = 
-            new BetweennessCentrality<Node, Connection>(m_graph, m_wtTansformer);
+        BetweennessCentrality<NodeWrapper, Connection> betweeness = 
+            new BetweennessCentrality<NodeWrapper, Connection>(m_graph, m_wtTansformer);
         return getCentrality(betweeness, false);
     }
     
@@ -127,16 +129,16 @@ public class JungAnalysis
      * Gets the normalized-betweenness centrality of every Node,
      * return in descending order
      */
-    public List<SortItem<Node>> getNormBetweennessCentrality(List<SortItem<Node>> centralityResult)
+    public List<SortItem<NodeWrapper>> getNormBetweennessCentrality(List<SortItem<NodeWrapper>> centralityResult)
     {
-        List<SortItem<Node>> results = new ArrayList<SortItem<Node>>();
-        for (SortItem<Node> item: centralityResult)
+        List<SortItem<NodeWrapper>> results = new ArrayList<SortItem<NodeWrapper>>();
+        for (SortItem<NodeWrapper> item: centralityResult)
         {
             // max centrality
             double maxCentrality = centralityResult.get(0).value;
             
             // normalize by dividing max value
-            SortItem<Node> normalized = new SortItem<Node>(item.item, item.value / maxCentrality);
+            SortItem<NodeWrapper> normalized = new SortItem<NodeWrapper>(item.item, item.value / maxCentrality);
             normalized.ascendingOrder = false;
             results.add(normalized);
         }
@@ -149,17 +151,45 @@ public class JungAnalysis
      * Gets the closeness centrality of every Node,
      * return in ascending order
      */
-    public List<SortItem<Node>> getClosenessCentrality()
+    public List<SortItem<NodeWrapper>> getClosenessCentrality()
     {
         if (m_shortestPath == null)
             m_shortestPath = new DijkstraShortestPath(m_graph, m_wtTansformer);
 
-        ClosenessCentrality<Node, Connection> closeness = 
-            new ClosenessCentrality<Node, Connection>(m_graph, m_shortestPath);
-        List<SortItem<Node>> results = getCentrality(closeness, true);
+        ClosenessCentrality<NodeWrapper, Connection> closeness = 
+            new ClosenessCentrality<NodeWrapper, Connection>(m_graph, m_shortestPath);
+        // special implementation for closeness
+        //List<SortItem<NodeWrapper>> results = getCentrality(closeness, true);
+        
+        // new DijkstraShortestPath every 500 nodes to keep 
+        // the cache hashMap from getting too big!
+        int nNodeFinished = 0;
+        List<SortItem<NodeWrapper>> results = new ArrayList<SortItem<NodeWrapper>>();
+        List<NodeWrapper> nodeWrappers = NodeWrapper.getList();
+        for (NodeWrapper nodeWrapper : nodeWrappers)
+        {
+            double value = new Double(closeness.getVertexScore(nodeWrapper).toString());
+            
+            SortItem<NodeWrapper> result = new SortItem<NodeWrapper>(nodeWrapper, value);
+            result.ascendingOrder = true;
+            results.add(result);
+            
+            if (++nNodeFinished % 10 == 0 || nNodeFinished == nodeWrappers.size())
+            {
+                System.out.println("Finished: " + nNodeFinished + " / " + nodeWrappers.size());
+            }
+            
+            // refresh DijkstraShortestPath object
+            if (nNodeFinished % 500 == 0)
+            {
+                m_shortestPath = new DijkstraShortestPath(m_graph, m_wtTansformer);
+                closeness = new ClosenessCentrality<NodeWrapper, Connection>(m_graph, m_shortestPath);
+            }
+        }
+        Collections.sort(results);
         
         // put nodes with 0 farness at the bottom 
-        for (SortItem<Node> item: results)
+        for (SortItem<NodeWrapper> item: results)
         {
             if (item.value <= 0)
             {
@@ -180,16 +210,16 @@ public class JungAnalysis
      * Gets the normalized-betweenness closeness of every Node,
      * return in descending order
      */
-    public List<SortItem<Node>> getNormClosenessCentrality(List<SortItem<Node>> centralityResult)
+    public List<SortItem<NodeWrapper>> getNormClosenessCentrality(List<SortItem<NodeWrapper>> centralityResult)
     {
-        List<SortItem<Node>> results = new ArrayList<SortItem<Node>>();
-        for (SortItem<Node> item: centralityResult)
+        List<SortItem<NodeWrapper>> results = new ArrayList<SortItem<NodeWrapper>>();
+        for (SortItem<NodeWrapper> item: centralityResult)
         {
             // max reciprocal value
             double maxCentrality = 1.0 / centralityResult.get(0).value;
                 
             // normalized by taking reciprocal and then divided by max reciprocal value
-            SortItem<Node> normalized = new SortItem<Node>(item.item, 1.0 / item.value / maxCentrality);
+            SortItem<NodeWrapper> normalized = new SortItem<NodeWrapper>(item.item, 1.0 / item.value / maxCentrality);
             normalized.ascendingOrder = false;
             results.add(normalized);
         }
@@ -202,10 +232,10 @@ public class JungAnalysis
      * Gets the degree centrality of every Node,
      * return in descending order
      */
-    public List<SortItem<Node>> getDegreeCentrality()
+    public List<SortItem<NodeWrapper>> getDegreeCentrality()
     {
-        DegreeScorer<Node> degree = 
-            new DegreeScorer<Node>(m_graph);
+        DegreeScorer<NodeWrapper> degree = 
+            new DegreeScorer<NodeWrapper>(m_graph);
         return getCentrality(degree, false);
     }
     
@@ -213,16 +243,16 @@ public class JungAnalysis
      * Gets the normalized-degree centrality of every Node,
      * return in descending order
      */
-    public List<SortItem<Node>> getNormDegreeCentrality(List<SortItem<Node>> centralityResult)
+    public List<SortItem<NodeWrapper>> getNormDegreeCentrality(List<SortItem<NodeWrapper>> centralityResult)
     {
-        List<SortItem<Node>> results = new ArrayList<SortItem<Node>>();
-        for (SortItem<Node> item: centralityResult)
+        List<SortItem<NodeWrapper>> results = new ArrayList<SortItem<NodeWrapper>>();
+        for (SortItem<NodeWrapper> item: centralityResult)
         {
             // max centrality
             double maxCentrality = centralityResult.get(0).value;
             
             // normalize by dividing max value
-            SortItem<Node> normalized = new SortItem<Node>(item.item, item.value / maxCentrality);
+            SortItem<NodeWrapper> normalized = new SortItem<NodeWrapper>(item.item, item.value / maxCentrality);
             normalized.ascendingOrder = false;
             results.add(normalized);
         }
@@ -235,10 +265,10 @@ public class JungAnalysis
      * Gets the eigenvector centrality of every Node,
      * return in descending order
      */
-    public List<SortItem<Node>> getEigenvectorCentrality()
+    public List<SortItem<NodeWrapper>> getEigenvectorCentrality()
     {
-        EigenvectorCentrality<Node, Connection> eigenvector = 
-            new EigenvectorCentrality<Node, Connection>(m_graph, m_wtTansformer);
+        EigenvectorCentrality<NodeWrapper, Connection> eigenvector = 
+            new EigenvectorCentrality<NodeWrapper, Connection>(m_graph, m_wtTansformer);
         return getCentrality(eigenvector, false);
     }
     
@@ -246,10 +276,10 @@ public class JungAnalysis
      * Gets the pagerank centrality of every Node,
      * return in descending order
      */
-    public List<SortItem<Node>> getPageRankCentrality()
+    public List<SortItem<NodeWrapper>> getPageRankCentrality()
     {
-        PageRank<Node, Connection> pagerank = 
-            new PageRank<Node, Connection>(m_graph, m_wtTansformer, 0.0001);
+        PageRank<NodeWrapper, Connection> pagerank = 
+            new PageRank<NodeWrapper, Connection>(m_graph, m_wtTansformer, 0.0001);
         return getCentrality(pagerank, false);
     }
     
@@ -257,34 +287,40 @@ public class JungAnalysis
      * Gets the reachability centrality of every Node,
      * return in descending order
      */
-    public List<SortItem<Node>> getReachabilityCentrality()
+    public List<SortItem<NodeWrapper>> getReachabilityCentrality()
     {  
         if (m_shortestPath == null)
             m_shortestPath = new DijkstraShortestPath(m_graph, m_wtTansformer);
         
         int nNodeFinished = 0;
-        List<SortItem<Node>> results = new ArrayList<SortItem<Node>>();
-        List<Node> nodes = m_nodes.getKeyList();
-        for (Node node : nodes)
+        List<SortItem<NodeWrapper>> results = new ArrayList<SortItem<NodeWrapper>>();
+        List<NodeWrapper> nodeWrappers = NodeWrapper.getList();
+        for (NodeWrapper nodeWrapper : nodeWrappers)
         {
             // shortest steps between node and every other node
             double value = 0;
-            for (Node node2 : nodes)
+            for (NodeWrapper nodeWrapper2 : nodeWrappers)
             {
-                Number step = m_shortestPath.getDistance(node, node2);
+                Number step = m_shortestPath.getDistance(nodeWrapper, nodeWrapper2);
                 if (step != null && step.intValue() > 0)
                 {
                     value += 1.0 / step.intValue();
                 }
             }
             
-            SortItem<Node> result = new SortItem<Node>(node, value);
+            SortItem<NodeWrapper> result = new SortItem<NodeWrapper>(nodeWrapper, value);
             result.ascendingOrder = false;
             results.add(result);
             
-            if (++nNodeFinished % 10 == 0 || nNodeFinished == nodes.size())
+            if (++nNodeFinished % 10 == 0 || nNodeFinished == nodeWrappers.size())
             {
-                System.out.println("Finished: " + nNodeFinished + " / " + nodes.size());
+                System.out.println("Finished: " + nNodeFinished + " / " + nodeWrappers.size());
+            }
+            
+            // refresh DijkstraShortestPath object
+            if (nNodeFinished % 500 == 0)
+            {
+                m_shortestPath = new DijkstraShortestPath(m_graph, m_wtTansformer);
             }
         }
         Collections.sort(results);
@@ -296,16 +332,16 @@ public class JungAnalysis
      * Gets the normalized-reachability centrality of every Node,
      * return in descending order
      */
-    public List<SortItem<Node>> getNormReachabilityCentrality(List<SortItem<Node>> centralityResult)
+    public List<SortItem<NodeWrapper>> getNormReachabilityCentrality(List<SortItem<NodeWrapper>> centralityResult)
     {
-        List<SortItem<Node>> results = new ArrayList<SortItem<Node>>();
-        for (SortItem<Node> item: centralityResult)
+        List<SortItem<NodeWrapper>> results = new ArrayList<SortItem<NodeWrapper>>();
+        for (SortItem<NodeWrapper> item: centralityResult)
         {
             // max centrality
             double maxCentrality = centralityResult.get(0).value;
             
             // normalize by dividing max value
-            SortItem<Node> normalized = new SortItem<Node>(item.item, item.value / maxCentrality);
+            SortItem<NodeWrapper> normalized = new SortItem<NodeWrapper>(item.item, item.value / maxCentrality);
             normalized.ascendingOrder = false;
             results.add(normalized);
         }
@@ -314,22 +350,22 @@ public class JungAnalysis
         return results;
     }
     
-    private List<SortItem<Node>> getCentrality(VertexScorer scorer, boolean ascendingOrder)
+    private List<SortItem<NodeWrapper>> getCentrality(VertexScorer scorer, boolean ascendingOrder)
     {
         int nNodeFinished = 0;
-        List<SortItem<Node>> results = new ArrayList<SortItem<Node>>();
-        List<Node> nodes = m_nodes.getKeyList();
-        for (Node node : nodes)
+        List<SortItem<NodeWrapper>> results = new ArrayList<SortItem<NodeWrapper>>();
+        List<NodeWrapper> nodeWrappers = NodeWrapper.getList();
+        for (NodeWrapper nodeWrapper : nodeWrappers)
         {
-            double value = new Double(scorer.getVertexScore(node).toString());
+            double value = new Double(scorer.getVertexScore(nodeWrapper).toString());
             
-            SortItem<Node> result = new SortItem<Node>(node, value);
+            SortItem<NodeWrapper> result = new SortItem<NodeWrapper>(nodeWrapper, value);
             result.ascendingOrder = ascendingOrder;
             results.add(result);
             
-            if (++nNodeFinished % 10 == 0 || nNodeFinished == nodes.size())
+            if (++nNodeFinished % 10 == 0 || nNodeFinished == nodeWrappers.size())
             {
-                System.out.println("Finished: " + nNodeFinished + " / " + nodes.size());
+                System.out.println("Finished: " + nNodeFinished + " / " + nodeWrappers.size());
             }
         }
         Collections.sort(results);
@@ -341,19 +377,19 @@ public class JungAnalysis
     public void showGraph()
     {
         // create Layout<V, E>, 
-        Layout<Node, Connection> layout = new CircleLayout <Node, Connection>(m_graph);
+        Layout<NodeWrapper, Connection> layout = new CircleLayout<NodeWrapper, Connection>(m_graph);
         layout.setSize(new Dimension(700,700));
         
         // create VisualizationComponent<V,E>
-        VisualizationViewer<Node, Connection> vv = 
-            new VisualizationViewer<Node, Connection>(layout);
+        VisualizationViewer<NodeWrapper, Connection> vv = 
+            new VisualizationViewer<NodeWrapper, Connection>(layout);
         vv.setPreferredSize(new Dimension(750,750));
         // Show vertex and edge labels
         //vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
         //vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
         // Create a graph mouse and add it to the visualization component
-        DefaultModalGraphMouse<Node, Connection> gm = 
-            new DefaultModalGraphMouse<Node, Connection>();
+        DefaultModalGraphMouse<NodeWrapper, Connection> gm = 
+            new DefaultModalGraphMouse<NodeWrapper, Connection>();
         gm.setMode(ModalGraphMouse.Mode.TRANSFORMING);
         vv.setGraphMouse(gm); 
         
@@ -424,73 +460,73 @@ public class JungAnalysis
         // degree
         System.out.println("Calculating degree centrality...");
         System.out.println("Calculating centrality for every vertex...");
-        List<SortItem<Node>> degree = analysis.getDegreeCentrality();
-        List<SortItem<Node>> ndegree = analysis.getNormDegreeCentrality(degree);        
-        System.out.println("Calculation finished!\n");
-        // reachability
-        System.out.println("Calculating reachability centrality...");
-        System.out.println("Calculating centrality for every vertex...");
-        List<SortItem<Node>> reachability = analysis.getReachabilityCentrality();
-        List<SortItem<Node>> nreachability = analysis.getNormReachabilityCentrality(reachability);        
+        List<SortItem<NodeWrapper>> degree = analysis.getDegreeCentrality();
+        List<SortItem<NodeWrapper>> ndegree = analysis.getNormDegreeCentrality(degree);        
         System.out.println("Calculation finished!\n");
         // closeness
         System.out.println("Calculating closeness centrality...");
         System.out.println("Calculating centrality for every vertex...");
-        List<SortItem<Node>> closeness = analysis.getClosenessCentrality();
-        List<SortItem<Node>> ncloseness = analysis.getNormClosenessCentrality(closeness);        
+        List<SortItem<NodeWrapper>> closeness = analysis.getClosenessCentrality();
+        List<SortItem<NodeWrapper>> ncloseness = analysis.getNormClosenessCentrality(closeness);        
+        System.out.println("Calculation finished!\n");  
+        // reachability
+        System.out.println("Calculating reachability centrality...");
+        System.out.println("Calculating centrality for every vertex...");
+        List<SortItem<NodeWrapper>> reachability = analysis.getReachabilityCentrality();
+        List<SortItem<NodeWrapper>> nreachability = analysis.getNormReachabilityCentrality(reachability);        
         System.out.println("Calculation finished!\n");
         // betweenness
         System.out.println("Calculating betweenness centrality...");
         System.out.println("Calculating centrality for every vertex...");
-        List<SortItem<Node>> betweenness = analysis.getBetweennessCentrality();
-        List<SortItem<Node>> nbetweenness = analysis.getNormBetweennessCentrality(betweenness);        
+        List<SortItem<NodeWrapper>> betweenness = analysis.getBetweennessCentrality();
+        List<SortItem<NodeWrapper>> nbetweenness = analysis.getNormBetweennessCentrality(betweenness);        
         System.out.println("Calculation finished!\n");
         
         // generate output
         System.out.println("Output to file...");
         DecimalFormat format = new DecimalFormat("0.0000"); 
-        Hashtable<Node, String> output = new Hashtable<Node, String>();
+        Hashtable<NodeWrapper, String> output = new Hashtable<NodeWrapper, String>();
         for (int i = 0; i < degree.size(); i++)
         {
-            SortItem<Node> item     = degree.get(i);
-            SortItem<Node> nitem    = ndegree.get(i);
-            String nodeName         = item.item.toString().split("\n")[0];
+            SortItem<NodeWrapper> item     = degree.get(i);
+            SortItem<NodeWrapper> nitem    = ndegree.get(i);
+            String nodeName = item.item.m_node.toString().split("\n")[0];
             output.put(item.item, nodeName + "\t" + format.format(item.value) + "\t" + format.format(nitem.value));
         }
         for (int i = 0; i < closeness.size(); i++)
         {
-            SortItem<Node> item     = closeness.get(i);
-            SortItem<Node> nitem    = ncloseness.get(i);
+            SortItem<NodeWrapper> item     = closeness.get(i);
+            SortItem<NodeWrapper> nitem    = ncloseness.get(i);
             
             String str = output.get(item.item);
             output.put(item.item, str + "\t" + format.format(item.value) + "\t" + format.format(nitem.value));
         }
         for (int i = 0; i < reachability.size(); i++)
         {
-            SortItem<Node> item     = reachability.get(i);
-            SortItem<Node> nitem    = nreachability.get(i);
+            SortItem<NodeWrapper> item     = reachability.get(i);
+            SortItem<NodeWrapper> nitem    = nreachability.get(i);
             
             String str = output.get(item.item);
             output.put(item.item, str + "\t" + format.format(item.value) + "\t" + format.format(nitem.value));
         }
         for (int i = 0; i < betweenness.size(); i++)
         {
-            SortItem<Node> item     = betweenness.get(i);
-            SortItem<Node> nitem    = nbetweenness.get(i);
+            SortItem<NodeWrapper> item     = betweenness.get(i);
+            SortItem<NodeWrapper> nitem    = nbetweenness.get(i);
             
             String str = output.get(item.item);
             output.put(item.item, str + "\t" + format.format(item.value) + "\t" + format.format(nitem.value));
         }
         
         // output to file
-        File centralityFile = new File("./centrality.txt");
+        File centralityFile = new File("./" + jarFile.getName() + "_centrality.txt");
         if (centralityFile.exists())
         {
             centralityFile.delete();
         }
         centralityFile.createNewFile();
         BufferedWriter writer = new BufferedWriter(new FileWriter(centralityFile));
-        for (SortItem<Node> item: degree)
+        for (SortItem<NodeWrapper> item: degree)
         {
             String str = output.get(item.item);
             if (str != null && str.length() > 0)
@@ -519,15 +555,15 @@ public class JungAnalysis
         // centrality analysis
         int nRank = 1;
         System.out.println("Calculating centrality for every vertex...");
-        List<SortItem<Node>> results = analysis.getClosenessCentrality();
-        List<SortItem<Node>> results2 = analysis.getNormClosenessCentrality(results);        
+        List<SortItem<NodeWrapper>> results = analysis.getClosenessCentrality();
+        List<SortItem<NodeWrapper>> results2 = analysis.getNormClosenessCentrality(results);        
         System.out.println("Calculation finished!\n");
         for (int i = 0; i < results.size(); i++)
         {
-            SortItem<Node> sortItem = results.get(i);
-            SortItem<Node> sortItem2 = results2.get(i);         
+            SortItem<NodeWrapper> sortItem = results.get(i);
+            SortItem<NodeWrapper> sortItem2 = results2.get(i);         
             System.out.println("Rank " + nRank++ + ": ");
-            System.out.println(sortItem.item + "\nValue: " + sortItem.value);
+            System.out.println(sortItem.item.m_node + "\nValue: " + sortItem.value);
             System.out.println("Normalized Value: " + sortItem2.value);          
             System.out.println();
         } 
