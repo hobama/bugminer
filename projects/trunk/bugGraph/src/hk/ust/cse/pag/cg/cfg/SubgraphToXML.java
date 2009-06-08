@@ -19,7 +19,7 @@ import java.util.Hashtable;
  * 
  */
 public class SubgraphToXML {
-	Hashtable<Integer, String> graphNodeTable = new Hashtable<Integer, String>();
+	NodeTable nTable;
 	File checkOutDir;
 
 	/**
@@ -33,27 +33,10 @@ public class SubgraphToXML {
 		this.checkOutDir = new File(checkOutDirName);
 
 		// build graphNodeTable from file
-		buildTable();
+		nTable = new NodeTable(checkOutDirName);
 	}
 
-	private void buildTable() throws IOException {
-
-		BufferedReader br = new BufferedReader(new FileReader(new File(
-				checkOutDir, "graph_node.txt")));
-		while (true) {
-			String line = br.readLine();
-			if (line == null) {
-				break;
-			}
-
-			String splits[] = line.split("\\W+", 2);
-			if (splits.length == 2 && Util.isAllDigit(splits[0])) {
-				graphNodeTable.put(Integer.parseInt(splits[0]), splits[1]);
-			}
-
-		}
-		br.close();
-	}
+	
 
 	public void toXGML(String fileName) throws IOException {
 		File file = new File(checkOutDir, fileName);
@@ -99,7 +82,7 @@ public class SubgraphToXML {
 	}
 
 	private String getNodeSection(String id, int label) {
-		String nodeName = graphNodeTable.get(label);
+		String nodeName = nTable.get(label);
 
 		String node = "<section name=\"node\">\n";
 		node += "  <attribute key=\"id\" type=\"String\">" + id
@@ -142,12 +125,10 @@ public class SubgraphToXML {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-		String checkOutDif = Const.CHECKOUT_DIR + "/columba-svn";
-		SubgraphToXML subraph = new SubgraphToXML(checkOutDif);
+		SubgraphToXML subraph = new SubgraphToXML(Const.CHECKOUT_DIR + "/columba-svn");
 		subraph.toXGML("subgraph.txt");
 
-		checkOutDif = Const.CHECKOUT_DIR + "/scarab";
-		subraph = new SubgraphToXML(checkOutDif);
+		subraph = new SubgraphToXML(Const.CHECKOUT_DIR + "/columba-svn");
 		subraph.toXGML("subgraph.txt");
 	}
 }
