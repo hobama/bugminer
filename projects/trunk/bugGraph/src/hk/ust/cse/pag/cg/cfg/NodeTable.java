@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.ArrayList;
 
 /**
  * Build node table from graph_node.txt
@@ -16,6 +17,7 @@ import java.util.Hashtable;
  */
 public class NodeTable {
 	Hashtable<Integer, String> graphNodeTable;
+	ArrayList<Integer> indexedKeyArrayList; //indexed hashKey in this list
 
 	/**
 	 * Build node table 
@@ -23,7 +25,10 @@ public class NodeTable {
 	 * @throws IOException
 	 */
 	public NodeTable(String projectDir) throws IOException {
-		graphNodeTable = new Hashtable<Integer, String>();
+		Hashtable<Integer, String> graphNodeHashTable;
+		indexedKeyArrayList=new ArrayList<Integer>();
+		int index=0;
+		graphNodeHashTable = new Hashtable<Integer, String>();
 		BufferedReader br = new BufferedReader(new FileReader(new File(
 				projectDir, "graph_node.txt")));
 		while (true) {
@@ -34,18 +39,28 @@ public class NodeTable {
 
 			String splits[] = line.split("\\W+", 2);
 			if (splits.length == 2 && Util.isAllDigit(splits[0])) {
-				graphNodeTable.put(Integer.parseInt(splits[0]), splits[1]);
+				graphNodeHashTable.put(Integer.parseInt(splits[0]), splits[1]);
+				// build index-hashKey arrayList
+				indexedKeyArrayList.add(index, Integer.parseInt(splits[0]));
+				index++;
 			}
 
 		}
 		br.close();
+		
+		//build graphNodeTable		
+		graphNodeTable = new Hashtable<Integer, String>();
+		for (int i=0;i<graphNodeHashTable.size();i++){
+			graphNodeTable.put(i, graphNodeHashTable.get(indexedKeyArrayList.get(i)));
+		}
 	}
+
+	
 
 	public String get(int label) {
 		if (graphNodeTable == null) {
 			return null;
 		}
-
 		return graphNodeTable.get(label);
 	}
 }
