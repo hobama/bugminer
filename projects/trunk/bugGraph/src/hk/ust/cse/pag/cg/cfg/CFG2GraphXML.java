@@ -251,14 +251,16 @@ public class CFG2GraphXML {
 		}
 
 		Set<Integer> shownNodes = new HashSet<Integer>();
+		int i=0;
 		for (Node n : nodes) {
 			if (n.color == 0 && !shownNodes.contains(n.id)) { // if it is
-				// diff
+				// diff				
 				Integer id = getNodeId(allNodeTable, n);
-
+				n.setID(i);
 				String node = "v " + n.id + " " + id;
 				ps.println(node);
 				shownNodes.add(n.id);
+				i++;
 			}
 		}
 

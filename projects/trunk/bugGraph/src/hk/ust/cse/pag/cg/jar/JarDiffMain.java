@@ -142,7 +142,7 @@ public class JarDiffMain {
 		File bugGFile = new File(checkOutDir, "bug_graph.txt");
 		File nodeGFile = new File(checkOutDir, "graph_node.txt");
 
-		PrintStream psBuf = new PrintStream(new FileOutputStream(bugGFile));
+		PrintStream psBug = new PrintStream(new FileOutputStream(bugGFile));
 		PrintStream psFix = new PrintStream(new FileOutputStream(fixGFile));
 		PrintStream psNode = new PrintStream(new FileOutputStream(nodeGFile));
 
@@ -171,27 +171,29 @@ public class JarDiffMain {
 			File newJar = new File(jarPrefix + splits[1] + ".jar");
 
 			if (!prevJar.exists() || !newJar.exists()) {
+				System.out.println("the file does not exist");
 				continue;
 			}
 
 			System.out.println("Working on " + prevJar + " and " + newJar);
 			JarDiffMain diff = new JarDiffMain();
 			JarDiffResult result = diff.getDiff(prevJar, newJar);
-
+			
 			for (CFGDiffResult cfgDiffResult : result.changedCFGList) {
-				CFG2GraphXML.toGraphXML(cfgDiffResult, psBuf, psFix, true,
+				CFG2GraphXML.toGraphXML(cfgDiffResult, psBug, psFix, true,
 						allNodeTable);
 
 				// update bug and fix counts
 				cfgDiffResult.updateCount(bugCount, fixCount);
 			}
+			
 		}
-
+		
 		for (String name : allNodeTable.keySet()) {
 			psNode.println(allNodeTable.get(name) + " " + name);
 		}
-
-		psBuf.close();
+		
+		psBug.close();
 		psFix.close();
 		psNode.close();
 
@@ -212,13 +214,13 @@ public class JarDiffMain {
 
 		// We have to run all of them together
 		// so that we capture the graph type correctly.
-		getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR
-				+ "/columba-svn"), "columba");
-		getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR + "/jedit"),
-				"jedit");
+		//getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR
+		//		+ "/columba-svn"), "columba");
+		//getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR + "/jedit"),
+		//		"jedit");
 
-		getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR + "/scarab"),
-				"scarab");
+		//getJarDiffGraph(allNodeTable, new File(Const.CHECKOUT_DIR + "/scarab"),
+		//		"scarab");
 
 		getJarDiffGraph(allNodeTable,
 				new File(Const.CHECKOUT_DIR + "/argouml"), "argouml");

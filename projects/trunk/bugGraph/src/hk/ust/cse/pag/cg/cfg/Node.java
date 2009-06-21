@@ -114,4 +114,7 @@ public class Node implements Comparable<Node> {
 	public int compareTo(Node o) {
 		return name.compareTo(o.name);
 	}
+	public void setID(int id){
+		this.id=id;		
+	}
 }
