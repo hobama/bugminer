@@ -1,0 +1,884 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="xgml">
+<attribute key="Creator" type="String">yFiles</attribute>
+<attribute key="Version" type="String">2.6</attribute>
+<section name="graph">
+<attribute key="hierarchic" type="int">1</attribute>
+<attribute key="label" type="String"></attribute>
+<attribute key="directed" type="int">1</attribute>
+
+<section name="node">
+  <attribute key="id" type="String">ldc_w:
+  in(invokespecial:-)
+  out(invokevirtual:-)prev</attribute>
+  <attribute key="label" type="String">ldc_w:
+  in(invokespecial:-)
+  out(invokevirtual:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokevirtual:aload_3:aload_2:
+  in(invokevirtual:aload_3:-)
+  out(invokevirtual:return:-)prev</attribute>
+  <attribute key="label" type="String">invokevirtual:aload_3:aload_2:
+  in(invokevirtual:aload_3:-)
+  out(invokevirtual:return:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FF0000</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokestatic:
+  in(invokevirtual:-)
+  out(invokespecial:-)prev</attribute>
+  <attribute key="label" type="String">invokestatic:
+  in(invokevirtual:-)
+  out(invokespecial:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokespecial:astore_3:aload_3:aload_1:
+  in(invokespecial:astore_2:new:dup:-)
+  out(invokevirtual:aload_3:-)prev</attribute>
+  <attribute key="label" type="String">invokespecial:astore_3:aload_3:aload_1:
+  in(invokespecial:astore_2:new:dup:-)
+  out(invokevirtual:aload_3:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FF0000</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokevirtual:
+  in(invokevirtual:-)
+  out(invokespecial:astore_2:new:dup:-)prev</attribute>
+  <attribute key="label" type="String">invokevirtual:
+  in(invokevirtual:-)
+  out(invokespecial:astore_2:new:dup:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">new:dup:
+  in(nop:-)
+  out(ldc:-)prev</attribute>
+  <attribute key="label" type="String">new:dup:
+  in(nop:-)
+  out(ldc:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokespecial:astore_1:new:dup:aload_1:
+  in(ldc:-)
+  out(invokevirtual:new:dup:aload_1:-)prev</attribute>
+  <attribute key="label" type="String">invokespecial:astore_1:new:dup:aload_1:
+  in(ldc:-)
+  out(invokevirtual:new:dup:aload_1:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokespecial:
+  in(invokestatic:-)
+  out(ldc_w:-)prev</attribute>
+  <attribute key="label" type="String">invokespecial:
+  in(invokestatic:-)
+  out(ldc_w:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokespecial:astore_2:new:dup:
+  in(invokevirtual:-)
+  out(invokespecial:astore_3:aload_3:aload_1:-)prev</attribute>
+  <attribute key="label" type="String">invokespecial:astore_2:new:dup:
+  in(invokevirtual:-)
+  out(invokespecial:astore_3:aload_3:aload_1:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokevirtual:new:dup:aload_1:
+  in(invokespecial:astore_1:new:dup:aload_1:-)
+  out(invokevirtual:-)prev</attribute>
+  <attribute key="label" type="String">invokevirtual:new:dup:aload_1:
+  in(invokespecial:astore_1:new:dup:aload_1:-)
+  out(invokevirtual:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokevirtual:
+  in(invokevirtual:new:dup:aload_1:-)
+  out(invokestatic:-)prev</attribute>
+  <attribute key="label" type="String">invokevirtual:
+  in(invokevirtual:new:dup:aload_1:-)
+  out(invokestatic:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokevirtual:aload_3:
+  in(invokespecial:astore_3:aload_3:aload_1:-)
+  out(invokevirtual:aload_3:aload_2:-)prev</attribute>
+  <attribute key="label" type="String">invokevirtual:aload_3:
+  in(invokespecial:astore_3:aload_3:aload_1:-)
+  out(invokevirtual:aload_3:aload_2:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FF0000</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokevirtual:return:
+  in(invokevirtual:aload_3:aload_2:-)
+  out()prev</attribute>
+  <attribute key="label" type="String">invokevirtual:return:
+  in(invokevirtual:aload_3:aload_2:-)
+  out()</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FF0000</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokevirtual:
+  in(ldc_w:-)
+  out(invokevirtual:-)prev</attribute>
+  <attribute key="label" type="String">invokevirtual:
+  in(ldc_w:-)
+  out(invokevirtual:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">nop:
+  in()
+  out(new:dup:-)prev</attribute>
+  <attribute key="label" type="String">nop:
+  in()
+  out(new:dup:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">ldc:
+  in(new:dup:-)
+  out(invokespecial:astore_1:new:dup:aload_1:-)prev</attribute>
+  <attribute key="label" type="String">ldc:
+  in(new:dup:-)
+  out(invokespecial:astore_1:new:dup:aload_1:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="edge">
+<attribute key="source" type="String">ldc_w:
+  in(invokespecial:-)
+  out(invokevirtual:-)prev</attribute>
+<attribute key="target" type="String">invokevirtual:
+  in(ldc_w:-)
+  out(invokevirtual:-)prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokevirtual:aload_3:aload_2:
+  in(invokevirtual:aload_3:-)
+  out(invokevirtual:return:-)prev</attribute>
+<attribute key="target" type="String">invokevirtual:return:
+  in(invokevirtual:aload_3:aload_2:-)
+  out()prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokestatic:
+  in(invokevirtual:-)
+  out(invokespecial:-)prev</attribute>
+<attribute key="target" type="String">invokespecial:
+  in(invokestatic:-)
+  out(ldc_w:-)prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokespecial:astore_3:aload_3:aload_1:
+  in(invokespecial:astore_2:new:dup:-)
+  out(invokevirtual:aload_3:-)prev</attribute>
+<attribute key="target" type="String">invokevirtual:aload_3:
+  in(invokespecial:astore_3:aload_3:aload_1:-)
+  out(invokevirtual:aload_3:aload_2:-)prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokevirtual:
+  in(invokevirtual:-)
+  out(invokespecial:astore_2:new:dup:-)prev</attribute>
+<attribute key="target" type="String">invokespecial:astore_2:new:dup:
+  in(invokevirtual:-)
+  out(invokespecial:astore_3:aload_3:aload_1:-)prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">new:dup:
+  in(nop:-)
+  out(ldc:-)prev</attribute>
+<attribute key="target" type="String">ldc:
+  in(new:dup:-)
+  out(invokespecial:astore_1:new:dup:aload_1:-)prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokespecial:astore_1:new:dup:aload_1:
+  in(ldc:-)
+  out(invokevirtual:new:dup:aload_1:-)prev</attribute>
+<attribute key="target" type="String">invokevirtual:new:dup:aload_1:
+  in(invokespecial:astore_1:new:dup:aload_1:-)
+  out(invokevirtual:-)prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokespecial:
+  in(invokestatic:-)
+  out(ldc_w:-)prev</attribute>
+<attribute key="target" type="String">ldc_w:
+  in(invokespecial:-)
+  out(invokevirtual:-)prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokespecial:astore_2:new:dup:
+  in(invokevirtual:-)
+  out(invokespecial:astore_3:aload_3:aload_1:-)prev</attribute>
+<attribute key="target" type="String">invokespecial:astore_3:aload_3:aload_1:
+  in(invokespecial:astore_2:new:dup:-)
+  out(invokevirtual:aload_3:-)prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokevirtual:new:dup:aload_1:
+  in(invokespecial:astore_1:new:dup:aload_1:-)
+  out(invokevirtual:-)prev</attribute>
+<attribute key="target" type="String">invokevirtual:
+  in(invokevirtual:new:dup:aload_1:-)
+  out(invokestatic:-)prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokevirtual:
+  in(invokevirtual:new:dup:aload_1:-)
+  out(invokestatic:-)prev</attribute>
+<attribute key="target" type="String">invokestatic:
+  in(invokevirtual:-)
+  out(invokespecial:-)prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokevirtual:aload_3:
+  in(invokespecial:astore_3:aload_3:aload_1:-)
+  out(invokevirtual:aload_3:aload_2:-)prev</attribute>
+<attribute key="target" type="String">invokevirtual:aload_3:aload_2:
+  in(invokevirtual:aload_3:-)
+  out(invokevirtual:return:-)prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokevirtual:
+  in(ldc_w:-)
+  out(invokevirtual:-)prev</attribute>
+<attribute key="target" type="String">invokevirtual:
+  in(invokevirtual:-)
+  out(invokespecial:astore_2:new:dup:-)prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">nop:
+  in()
+  out(new:dup:-)prev</attribute>
+<attribute key="target" type="String">new:dup:
+  in(nop:-)
+  out(ldc:-)prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">ldc:
+  in(new:dup:-)
+  out(invokespecial:astore_1:new:dup:aload_1:-)prev</attribute>
+<attribute key="target" type="String">invokespecial:astore_1:new:dup:aload_1:
+  in(ldc:-)
+  out(invokevirtual:new:dup:aload_1:-)prev</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="node">
+  <attribute key="id" type="String">ldc_w:
+  in(invokespecial:-)
+  out(invokevirtual:-)new</attribute>
+  <attribute key="label" type="String">ldc_w:
+  in(invokespecial:-)
+  out(invokevirtual:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokestatic:
+  in(invokevirtual:-)
+  out(invokespecial:-)new</attribute>
+  <attribute key="label" type="String">invokestatic:
+  in(invokevirtual:-)
+  out(invokespecial:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokespecial:aload_3:
+  in(invokespecial:astore_3:aload_3:aload_1:-)
+  out(invokevirtual:aload_3:aload_2:-)new</attribute>
+  <attribute key="label" type="String">invokespecial:aload_3:
+  in(invokespecial:astore_3:aload_3:aload_1:-)
+  out(invokevirtual:aload_3:aload_2:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#00FF00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokevirtual:
+  in(invokevirtual:-)
+  out(invokespecial:astore_2:new:dup:-)new</attribute>
+  <attribute key="label" type="String">invokevirtual:
+  in(invokevirtual:-)
+  out(invokespecial:astore_2:new:dup:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">new:dup:
+  in(nop:-)
+  out(ldc:-)new</attribute>
+  <attribute key="label" type="String">new:dup:
+  in(nop:-)
+  out(ldc:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokespecial:astore_1:new:dup:aload_1:
+  in(ldc:-)
+  out(invokevirtual:new:dup:aload_1:-)new</attribute>
+  <attribute key="label" type="String">invokespecial:astore_1:new:dup:aload_1:
+  in(ldc:-)
+  out(invokevirtual:new:dup:aload_1:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokespecial:
+  in(invokestatic:-)
+  out(ldc_w:-)new</attribute>
+  <attribute key="label" type="String">invokespecial:
+  in(invokestatic:-)
+  out(ldc_w:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokespecial:astore_2:new:dup:
+  in(invokevirtual:-)
+  out(invokespecial:astore_3:aload_3:aload_1:-)new</attribute>
+  <attribute key="label" type="String">invokespecial:astore_2:new:dup:
+  in(invokevirtual:-)
+  out(invokespecial:astore_3:aload_3:aload_1:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokevirtual:new:dup:aload_1:
+  in(invokespecial:astore_1:new:dup:aload_1:-)
+  out(invokevirtual:-)new</attribute>
+  <attribute key="label" type="String">invokevirtual:new:dup:aload_1:
+  in(invokespecial:astore_1:new:dup:aload_1:-)
+  out(invokevirtual:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokevirtual:
+  in(invokevirtual:new:dup:aload_1:-)
+  out(invokestatic:-)new</attribute>
+  <attribute key="label" type="String">invokevirtual:
+  in(invokevirtual:new:dup:aload_1:-)
+  out(invokestatic:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokevirtual:
+  in(ldc_w:-)
+  out(invokevirtual:-)new</attribute>
+  <attribute key="label" type="String">invokevirtual:
+  in(ldc_w:-)
+  out(invokevirtual:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokespecial:return:
+  in(invokevirtual:aload_3:aload_2:-)
+  out()new</attribute>
+  <attribute key="label" type="String">invokespecial:return:
+  in(invokevirtual:aload_3:aload_2:-)
+  out()</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#00FF00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokevirtual:aload_3:aload_2:
+  in(invokespecial:aload_3:-)
+  out(invokespecial:return:-)new</attribute>
+  <attribute key="label" type="String">invokevirtual:aload_3:aload_2:
+  in(invokespecial:aload_3:-)
+  out(invokespecial:return:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#00FF00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">nop:
+  in()
+  out(new:dup:-)new</attribute>
+  <attribute key="label" type="String">nop:
+  in()
+  out(new:dup:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">ldc:
+  in(new:dup:-)
+  out(invokespecial:astore_1:new:dup:aload_1:-)new</attribute>
+  <attribute key="label" type="String">ldc:
+  in(new:dup:-)
+  out(invokespecial:astore_1:new:dup:aload_1:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#FFCC00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="node">
+  <attribute key="id" type="String">invokespecial:astore_3:aload_3:aload_1:
+  in(invokespecial:astore_2:new:dup:-)
+  out(invokespecial:aload_3:-)new</attribute>
+  <attribute key="label" type="String">invokespecial:astore_3:aload_3:aload_1:
+  in(invokespecial:astore_2:new:dup:-)
+  out(invokespecial:aload_3:-)</attribute>
+  <section name="graphics">
+    <attribute key="w" type="double">100</attribute>
+    <attribute key="h" type="double">50</attribute>
+    <attribute key="type" type="String">rectangle3d</attribute>
+    <attribute key="fill" type="String">#00FF00</attribute>
+    <attribute key="outline" type="String">#000000</attribute>
+  </section>
+</section>
+
+<section name="edge">
+<attribute key="source" type="String">ldc_w:
+  in(invokespecial:-)
+  out(invokevirtual:-)new</attribute>
+<attribute key="target" type="String">invokevirtual:
+  in(ldc_w:-)
+  out(invokevirtual:-)new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokestatic:
+  in(invokevirtual:-)
+  out(invokespecial:-)new</attribute>
+<attribute key="target" type="String">invokespecial:
+  in(invokestatic:-)
+  out(ldc_w:-)new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokespecial:aload_3:
+  in(invokespecial:astore_3:aload_3:aload_1:-)
+  out(invokevirtual:aload_3:aload_2:-)new</attribute>
+<attribute key="target" type="String">invokevirtual:aload_3:aload_2:
+  in(invokespecial:aload_3:-)
+  out(invokespecial:return:-)new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokevirtual:
+  in(invokevirtual:-)
+  out(invokespecial:astore_2:new:dup:-)new</attribute>
+<attribute key="target" type="String">invokespecial:astore_2:new:dup:
+  in(invokevirtual:-)
+  out(invokespecial:astore_3:aload_3:aload_1:-)new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">new:dup:
+  in(nop:-)
+  out(ldc:-)new</attribute>
+<attribute key="target" type="String">ldc:
+  in(new:dup:-)
+  out(invokespecial:astore_1:new:dup:aload_1:-)new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokespecial:astore_1:new:dup:aload_1:
+  in(ldc:-)
+  out(invokevirtual:new:dup:aload_1:-)new</attribute>
+<attribute key="target" type="String">invokevirtual:new:dup:aload_1:
+  in(invokespecial:astore_1:new:dup:aload_1:-)
+  out(invokevirtual:-)new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokespecial:
+  in(invokestatic:-)
+  out(ldc_w:-)new</attribute>
+<attribute key="target" type="String">ldc_w:
+  in(invokespecial:-)
+  out(invokevirtual:-)new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokespecial:astore_2:new:dup:
+  in(invokevirtual:-)
+  out(invokespecial:astore_3:aload_3:aload_1:-)new</attribute>
+<attribute key="target" type="String">invokespecial:astore_3:aload_3:aload_1:
+  in(invokespecial:astore_2:new:dup:-)
+  out(invokespecial:aload_3:-)new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokevirtual:new:dup:aload_1:
+  in(invokespecial:astore_1:new:dup:aload_1:-)
+  out(invokevirtual:-)new</attribute>
+<attribute key="target" type="String">invokevirtual:
+  in(invokevirtual:new:dup:aload_1:-)
+  out(invokestatic:-)new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokevirtual:
+  in(invokevirtual:new:dup:aload_1:-)
+  out(invokestatic:-)new</attribute>
+<attribute key="target" type="String">invokestatic:
+  in(invokevirtual:-)
+  out(invokespecial:-)new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokevirtual:
+  in(ldc_w:-)
+  out(invokevirtual:-)new</attribute>
+<attribute key="target" type="String">invokevirtual:
+  in(invokevirtual:-)
+  out(invokespecial:astore_2:new:dup:-)new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokevirtual:aload_3:aload_2:
+  in(invokespecial:aload_3:-)
+  out(invokespecial:return:-)new</attribute>
+<attribute key="target" type="String">invokespecial:return:
+  in(invokevirtual:aload_3:aload_2:-)
+  out()new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">nop:
+  in()
+  out(new:dup:-)new</attribute>
+<attribute key="target" type="String">new:dup:
+  in(nop:-)
+  out(ldc:-)new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">ldc:
+  in(new:dup:-)
+  out(invokespecial:astore_1:new:dup:aload_1:-)new</attribute>
+<attribute key="target" type="String">invokespecial:astore_1:new:dup:aload_1:
+  in(ldc:-)
+  out(invokevirtual:new:dup:aload_1:-)new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+<section name="edge">
+<attribute key="source" type="String">invokespecial:astore_3:aload_3:aload_1:
+  in(invokespecial:astore_2:new:dup:-)
+  out(invokespecial:aload_3:-)new</attribute>
+<attribute key="target" type="String">invokespecial:aload_3:
+  in(invokespecial:astore_3:aload_3:aload_1:-)
+  out(invokevirtual:aload_3:aload_2:-)new</attribute>
+<section name="graphics">
+<attribute key="fill" type="String">#000000</attribute>
+<attribute key="targetArrow" type="String">standard</attribute>
+  </section>
+</section>
+  </section>
+</section>
+
