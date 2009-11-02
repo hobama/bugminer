@@ -48,5 +48,9 @@ public class NodeTable {
 
 		return graphNodeTable.get(label);
 	}
+	
+	public Hashtable<Integer, String> getGraphNodeTable(){
+		return this.graphNodeTable;
+	}
 }
 

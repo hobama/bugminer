@@ -285,6 +285,8 @@ public class CFG2GraphXML {
 		
 		// mapping the random node.id to consecutive index starting from 0
 		Hashtable<Integer, Integer> idToIndex = new Hashtable<Integer, Integer>();
+		//Hashtable<Integer, String>	hashNodes=new Hashtable<Integer, String>();
+		
 		Integer index=0;
 		
 		for (Node n : nodes) {
@@ -296,7 +298,7 @@ public class CFG2GraphXML {
 			
 				}
 				String node = "v " + index + " " + id;
-
+				//hashNodes.put(n.id, node);
 				ps.println(node);
 				shownNodes.add(n.id);
 				index++;

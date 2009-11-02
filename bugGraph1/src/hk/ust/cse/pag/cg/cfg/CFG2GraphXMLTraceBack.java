@@ -289,7 +289,7 @@ public class CFG2GraphXMLTraceBack {
    */
 		
 		//deal with vertex
-		NodeTable nt=new NodeTable("c:/scratch/hunkim/checkouts/jedit");		
+		NodeTable nt=new NodeTable("c:/scratch/hunkim/checkouts/argouml");		
 		
 		Set<Integer> shownNodes = new HashSet<Integer>();
 		

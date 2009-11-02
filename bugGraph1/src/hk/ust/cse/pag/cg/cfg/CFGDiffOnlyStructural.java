@@ -137,6 +137,7 @@ public class CFGDiffOnlyStructural {
 		}
 
 		// let's check if any CFG is left in the table
+		/*
 		for (CFG cfg : newTable.values()) {
 			// do nothing also for adding CFGs
 			//CFGDiffResult result = new CFGDiffResult();
@@ -146,7 +147,7 @@ public class CFGDiffOnlyStructural {
 			//result.setNewClass(newRep);
 			//list.add(result);
 		}
-
+		*/
 		return list;
 	}
 
