@@ -24,17 +24,20 @@ public class Pattern2Source {
 	
 	private void pattern2Method( File checkOutDir) throws FileNotFoundException, IOException,
 			CFGBuilderException {
-		File bugPatFile = new File(checkOutDir, "bug-pat2.txt");		
+		//input:
+		File bugPatFile = new File(checkOutDir, "bug-pat_OM.txt");		
 		BufferedReader br = new BufferedReader(new FileReader(bugPatFile));
 		
-		File bugPatExpl = new File(checkOutDir, "bug-pat_exp2.txt");		
+		//output:
+		File bugPatExpl = new File(checkOutDir, "bug-pat_OMExp.txt");		
 		PrintStream psBugPatExpl = new PrintStream(new FileOutputStream(bugPatExpl));
 				
+		//another input:
 		//build a hashtable <CFG#, mappingInfo> for fast search
 		//using the bug_graph.expl.txt
 		Hashtable<String, String> bugGraphExpl=new Hashtable<String, String>();
 		
-		File bugExpl=new File(checkOutDir, "bug_graph_exp2.txt");
+		File bugExpl=new File(checkOutDir, "bug_graph_OMExp.txt");
 		BufferedReader brBugExpl = new BufferedReader(new FileReader(bugExpl));
 		while (true) {
 			String line = brBugExpl.readLine();

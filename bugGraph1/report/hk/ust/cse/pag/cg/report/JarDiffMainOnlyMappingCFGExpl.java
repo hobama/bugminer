@@ -145,9 +145,9 @@ public class JarDiffMainOnlyMappingCFGExpl {
 
 		System.out.println(jarPrefix);
 
-		File fixGFile = new File(checkOutDir, "fix_graph_exp2.txt");
-		File bugGFile = new File(checkOutDir, "bug_graph_exp2.txt");
-		File nodeGFile = new File(checkOutDir, "graph_node_exp2.txt");
+		File fixGFile = new File(checkOutDir, "fix_graph_OMExp.txt");
+		File bugGFile = new File(checkOutDir, "bug_graph_OMExp.txt");
+		File nodeGFile = new File(checkOutDir, "graph_node_OMExp.txt");
 
 		PrintStream psBug = new PrintStream(new FileOutputStream(bugGFile));
 		PrintStream psFix = new PrintStream(new FileOutputStream(fixGFile));

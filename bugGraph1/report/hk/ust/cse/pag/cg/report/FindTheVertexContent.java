@@ -45,10 +45,10 @@ public class FindTheVertexContent {
 	}
 	
 	public static void main(String[] args)throws IOException{
-		FindTheVertexContent findVertex=new FindTheVertexContent("42");
+		FindTheVertexContent findVertex=new FindTheVertexContent("1797");
 		findVertex.findVertexContent(findVertex.vertexNum, new File(Const.CHECKOUT_DIR + "/jedit"));
 		NodeTable nt=new NodeTable("c:/scratch/hunkim/checkouts/jedit");
-		System.out.println(nt.get(42));
+		System.out.println(nt.get(970));
 		
 	}
 

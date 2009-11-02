@@ -145,9 +145,9 @@ public class JarDiffMainForPatternTracing {
 
 		System.out.println(jarPrefix);
 
-		File fixGFile = new File(checkOutDir, "fix_graph_expl.txt");
-		File bugGFile = new File(checkOutDir, "bug_graph_expl.txt");
-		File nodeGFile = new File(checkOutDir, "graph_node_expl.txt");
+		File fixGFile = new File(checkOutDir, "fix_graph_exp.txt");
+		File bugGFile = new File(checkOutDir, "bug_graph_exp.txt");
+		File nodeGFile = new File(checkOutDir, "graph_node_exp.txt");
 
 		PrintStream psBug = new PrintStream(new FileOutputStream(bugGFile));
 		PrintStream psFix = new PrintStream(new FileOutputStream(fixGFile));
@@ -174,14 +174,6 @@ public class JarDiffMainForPatternTracing {
 			if (splits.length != 2) {
 				continue;
 			}
-			
-			// A mistake: according to "fix_rev.txt"'s content: 
-			//"16904:16903 
-			//fix for issue 5727: NPE in FigAssociaton.java (middleGroup is null)"
-			//the fix file is splits[0], and the bug file is splits[1], so prevJar is the second
-			//
-			// How to find this kind of bug? :) Is this a bug? yes, a semantic one
-			// which can not be find out unless the machine understands the semantic of software behind, like human
 			
 			File prevJar = new File(jarPrefix + splits[1] + ".jar");
 			File newJar = new File(jarPrefix + splits[0] + ".jar");
