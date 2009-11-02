@@ -165,16 +165,6 @@ public class JarDiffMain {
 				continue;
 			}
 			
-			// here there is a mistake, according to "fix_rev.txt", 
-			//"16904:16903 
-			//fix for issue 5727: NPE in FigAssociaton.java (middleGroup is null)"
-			//the fix file is splits[0], and the bug file is splits[1], so prevJar is the second
-			//
-			// How to find this kind of bug? :) Is this a bug? yes, a semantic one
-			// which can not be find out unless the machine understands the semantic of software behind, like human
-			//File prevJar = new File(jarPrefix + splits[0] + ".jar");
-			//File newJar = new File(jarPrefix + splits[1] + ".jar");
-			
 			File prevJar = new File(jarPrefix + splits[1] + ".jar");
 			File newJar = new File(jarPrefix + splits[0] + ".jar");
 
