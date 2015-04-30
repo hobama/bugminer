@@ -1,0 +1,1 @@
+Provide a basic module to parse bugzilla XML files and try to get some useful patterns or trends about the data.
